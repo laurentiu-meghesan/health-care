@@ -1,0 +1,9 @@
+server.port: 8084
+spring:
+  jpa:
+    hibernate.ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/health-care
+    username: health-care-admin
+    password: health-care-admin
