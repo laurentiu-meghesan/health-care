@@ -3,6 +3,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 public class Patient {
@@ -22,6 +23,14 @@ public class Patient {
     private String userName;
     @NotNull
     private String password;
+
+    public static int patientAge(LocalDate birthDate, LocalDate currentDate) {
+        if ((birthDate != null) && (currentDate != null)) {
+            return Period.between(birthDate, currentDate).getYears();
+        } else {
+            return 0;
+        }
+    }
 
     public long getId() {
         return id;
