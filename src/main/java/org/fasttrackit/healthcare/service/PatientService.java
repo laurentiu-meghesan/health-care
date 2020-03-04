@@ -1,6 +1,6 @@
 package org.fasttrackit.healthcare.service;
 import org.fasttrackit.healthcare.domain.Patient;
-import org.fasttrackit.healthcare.peristance.PatientRepository;
+import org.fasttrackit.healthcare.persistance.PatientRepository;
 import org.fasttrackit.healthcare.transfer.SavePatientRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

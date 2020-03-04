@@ -1,4 +1,4 @@
-package org.fasttrackit.healthcare.peristance;
+package org.fasttrackit.healthcare.persistance;
 
 import org.fasttrackit.healthcare.domain.Chat;
 import org.springframework.data.jpa.repository.JpaRepository;

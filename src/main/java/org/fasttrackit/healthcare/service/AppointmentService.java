@@ -1,6 +1,6 @@
 package org.fasttrackit.healthcare.service;
 import org.fasttrackit.healthcare.domain.Appointment;
-import org.fasttrackit.healthcare.peristance.AppointmentRepository;
+import org.fasttrackit.healthcare.persistance.AppointmentRepository;
 import org.fasttrackit.healthcare.transfer.SaveAppointmentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
