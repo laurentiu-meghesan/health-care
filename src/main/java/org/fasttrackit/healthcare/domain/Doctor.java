@@ -19,6 +19,14 @@ public class Doctor {
     @NotNull
     private String officeAddress;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -54,7 +62,8 @@ public class Doctor {
     @Override
     public String toString() {
         return "Doctor{" +
-                "firstName='" + firstName + '\'' +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", officeAddress='" + officeAddress + '\'' +

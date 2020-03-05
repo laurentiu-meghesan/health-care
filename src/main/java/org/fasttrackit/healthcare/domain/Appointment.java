@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Appointment {
-
     @Id
     @GeneratedValue
     private long id;

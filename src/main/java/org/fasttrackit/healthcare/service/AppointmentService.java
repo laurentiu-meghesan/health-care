@@ -1,11 +1,14 @@
 package org.fasttrackit.healthcare.service;
 import org.fasttrackit.healthcare.domain.Appointment;
+import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.AppointmentRepository;
 import org.fasttrackit.healthcare.transfer.SaveAppointmentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AppointmentService {
@@ -29,5 +32,12 @@ public class AppointmentService {
         appointment.setTreatment(request.getTreatment());
         appointment.setRecommendations(request.getRecommendations());
         return appointmentRepository.save(appointment);
+    }
+
+    public Appointment getAppointment(long id){
+        LOGGER.info("Retrieving Appointment {}", id);
+
+        return appointmentRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Appointment " + id + " not found."));
     }
 }
