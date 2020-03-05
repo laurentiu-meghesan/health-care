@@ -1,5 +1,4 @@
 package org.fasttrackit.healthcare.transfer;
-
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 

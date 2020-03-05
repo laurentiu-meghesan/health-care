@@ -1,5 +1,4 @@
 package org.fasttrackit.healthcare.transfer;
-
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -8,11 +7,8 @@ public class SaveAppointmentRequest {
     private LocalDateTime appointmentDate;
     @NotNull
     private long patientID;
-    @NotNull
     private String symptoms;
-    @NotNull
     private String diagnostic;
-    @NotNull
     private String treatment;
     private String recommendations;
 

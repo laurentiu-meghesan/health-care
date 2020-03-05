@@ -1,10 +1,23 @@
 package org.fasttrackit.healthcare.domain;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
+@Entity
 public class Doctor {
+
+    @Id
+    @GeneratedValue
+    private long id;
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
+    @NotNull
     private String phoneNumber;
-    private String email;
+    @NotNull
+    private String officeAddress;
 
     public String getFirstName() {
         return firstName;
@@ -30,12 +43,12 @@ public class Doctor {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getEmail() {
-        return email;
+    public String getOfficeAddress() {
+        return officeAddress;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setOfficeAddress(String officeAddress) {
+        this.officeAddress = officeAddress;
     }
 
     @Override
@@ -44,7 +57,7 @@ public class Doctor {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
+                ", officeAddress='" + officeAddress + '\'' +
                 '}';
     }
 }

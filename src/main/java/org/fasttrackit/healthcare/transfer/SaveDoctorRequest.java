@@ -1,8 +1,7 @@
 package org.fasttrackit.healthcare.transfer;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
-public class SavePatientRequest {
+public class SaveDoctorRequest {
     @NotNull
     private String firstName;
     @NotNull
@@ -10,7 +9,7 @@ public class SavePatientRequest {
     @NotNull
     private String phoneNumber;
     @NotNull
-    private LocalDate birthDate;
+    private String officeAddress;
 
     public String getFirstName() {
         return firstName;
@@ -36,21 +35,21 @@ public class SavePatientRequest {
         this.phoneNumber = phoneNumber;
     }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
+    public String getOfficeAddress() {
+        return officeAddress;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
+    public void setOfficeAddress(String officeAddress) {
+        this.officeAddress = officeAddress;
     }
 
     @Override
     public String toString() {
-        return "SavePatientRequest{" +
+        return "SaveDoctorRequest{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", birthDate=" + birthDate +
+                ", officeAddress='" + officeAddress + '\'' +
                 '}';
     }
 }

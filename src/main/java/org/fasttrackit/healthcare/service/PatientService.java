@@ -26,10 +26,6 @@ public class PatientService {
         patient.setLastName(request.getLastName());
         patient.setBirthDate(request.getBirthDate());
         patient.setPhoneNumber(request.getPhoneNumber());
-        patient.setEmail(request.getEmail());
-        patient.setUserName(request.getUserName());
-        patient.setPassword(request.getPassword());
-
         return patientRepository.save(patient);
     }
 }

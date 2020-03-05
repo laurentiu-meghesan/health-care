@@ -14,12 +14,9 @@ public class Appointment {
     @NotNull
     private LocalDateTime appointmentDate;
     @NotNull
-    private long patientID;
-    @NotNull
+    private long patientId;
     private String symptoms;
-    @NotNull
     private String diagnostic;
-    @NotNull
     private String treatment;
     private String recommendations;
 
@@ -39,12 +36,12 @@ public class Appointment {
         this.appointmentDate = appointmentDate;
     }
 
-    public long getPatientID() {
-        return patientID;
+    public long getPatientId() {
+        return patientId;
     }
 
-    public void setPatientID(long patientID) {
-        this.patientID = patientID;
+    public void setPatientId(long patientId) {
+        this.patientId = patientId;
     }
 
     public String getSymptoms() {
@@ -84,7 +81,7 @@ public class Appointment {
         return "Appointment{" +
                 "id=" + id +
                 ", appointmentDate=" + appointmentDate +
-                ", patientID=" + patientID +
+                ", patientID=" + patientId +
                 ", symptoms='" + symptoms + '\'' +
                 ", diagnostic='" + diagnostic + '\'' +
                 ", treatment='" + treatment + '\'' +

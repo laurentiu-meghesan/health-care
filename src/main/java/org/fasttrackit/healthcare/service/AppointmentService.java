@@ -23,7 +23,7 @@ public class AppointmentService {
         LOGGER.info("Creating Appointment {}", request);
         Appointment appointment = new Appointment();
         appointment.setAppointmentDate(request.getAppointmentDate());
-        appointment.setPatientID(request.getPatientID());
+        appointment.setPatientId(request.getPatientID());
         appointment.setSymptoms(request.getSymptoms());
         appointment.setDiagnostic(request.getDiagnostic());
         appointment.setTreatment(request.getTreatment());
