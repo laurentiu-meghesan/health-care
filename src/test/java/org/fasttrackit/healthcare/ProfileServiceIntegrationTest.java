@@ -1,13 +1,14 @@
 package org.fasttrackit.healthcare;
 
 import org.fasttrackit.healthcare.domain.Profile;
+import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.ProfileService;
 import org.fasttrackit.healthcare.transfer.SaveProfileRequest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.validation.ConstraintViolationException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -21,12 +22,12 @@ public class ProfileServiceIntegrationTest {
     private ProfileService profileService;
 
     @Test
-    void createProfile_whenValidRequest_thenProfileIsCreated(){
+    void createProfile_whenValidRequest_thenProfileIsCreated() {
         createProfile();
     }
 
     @Test
-    void createProfile_whenMissingUserId_thenExceptionIsThrown(){
+    void createProfile_whenMissingUserId_thenExceptionIsThrown() {
         SaveProfileRequest request = new SaveProfileRequest();
         request.setDoctor(false);
         request.setEmail("abc@xyz.com");
@@ -35,13 +36,30 @@ public class ProfileServiceIntegrationTest {
 
         try {
             profileService.createProfile(request);
-        }catch (Exception e){
+        } catch (Exception e) {
             assertThat(request, notNullValue());
             assertThat("Unexpected exception type.", e instanceof NullPointerException);
         }
     }
 
-    private void createProfile() {
+    @Test
+    void getProfile_whenExistingProfile_thenReturnProfile() {
+        Profile profile = createProfile();
+        Profile response = profileService.getProfile(profile.getId());
+        assertThat(response, notNullValue());
+        assertThat(response.getId(), is(profile.getId()));
+        assertThat(response.getUserId(), is(profile.getUserId()));
+        assertThat(response.getUserName(), is(profile.getUserName()));
+        assertThat(response.getPassword(), is(profile.getPassword()));
+        assertThat(response.getEmail(), is(profile.getEmail()));
+    }
+
+    @Test
+    void getProfile_whenNonExistingProfile_thenExceptionIsThrown() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> profileService.getProfile(500012));
+    }
+
+    private Profile createProfile() {
         SaveProfileRequest request = new SaveProfileRequest();
         request.setUserId(1L);
         request.setUserName("guru2005");
@@ -57,5 +75,6 @@ public class ProfileServiceIntegrationTest {
         assertThat(profile.getUserName(), is(request.getUserName()));
         assertThat(profile.getPassword(), is(request.getPassword()));
         assertThat(profile.getEmail(), is(request.getEmail()));
+        return profile;
     }
 }

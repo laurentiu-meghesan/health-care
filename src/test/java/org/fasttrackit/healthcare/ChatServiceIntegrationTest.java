@@ -1,9 +1,11 @@
 package org.fasttrackit.healthcare;
 
 import org.fasttrackit.healthcare.domain.Chat;
+import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.ChatService;
 import org.fasttrackit.healthcare.transfer.SaveChatRequest;
 import org.fasttrackit.healthcare.transfer.SaveProfileRequest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,6 +43,26 @@ public class ChatServiceIntegrationTest {
         }
     }
 
+    @Test
+    void getChat_whenExistingChat_thenReturnChat(){
+        Chat chat = createChat();
+
+        Chat response = chatService.getChat(chat.getId());
+
+        assertThat(response, notNullValue());
+        assertThat(response.getId(), is(chat.getId()));
+        assertThat(response.getPatientId(), is(chat.getPatientId()));
+        assertThat(response.getMessageDate(), is(chat.getMessageDate()));
+        assertThat(response.getMessageSent(), is(chat.getMessageSent()));
+        assertThat(response.getMessageReceived(), is(chat.getMessageReceived()));
+
+    }
+
+    @Test
+    void getChat_whenNonExistingChat_thenThrowResourceNotFoundException(){
+        Assertions.assertThrows(ResourceNotFoundException.class, ()-> chatService.getChat(21520));
+    }
+
     private Chat createChat() {
         SaveChatRequest request = new SaveChatRequest();
         request.setMessageDate(LocalDateTime.of(2020, 03,05,19,30));
@@ -57,4 +79,5 @@ public class ChatServiceIntegrationTest {
         assertThat(chat.getMessageReceived(), is(request.getMessageReceived()));
         return chat;
     }
+
 }

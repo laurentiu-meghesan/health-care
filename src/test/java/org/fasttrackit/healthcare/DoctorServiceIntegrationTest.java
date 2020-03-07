@@ -42,6 +42,20 @@ public class DoctorServiceIntegrationTest {
         }
     }
 
+    @Test
+    void getDoctor_whenExistingDoctor_thenReturnDoctor(){
+        Doctor doctor = createDoctor();
+
+        Doctor response = doctorService.getDoctor(doctor.getId());
+
+        assertThat(response, notNullValue());
+        assertThat(response.getId(), is(doctor.getId()));
+        assertThat(response.getFirstName(), is(doctor.getFirstName()));
+        assertThat(response.getLastName(), is(doctor.getLastName()));
+        assertThat(response.getPhoneNumber(), is(doctor.getPhoneNumber()));
+        assertThat(response.getOfficeAddress(), is(doctor.getOfficeAddress()));
+    }
+
     private Doctor createDoctor() {
         SaveDoctorRequest request = new SaveDoctorRequest();
         request.setFirstName("Iulian");

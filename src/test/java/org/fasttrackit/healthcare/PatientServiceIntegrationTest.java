@@ -1,8 +1,10 @@
 package org.fasttrackit.healthcare;
 
 import org.fasttrackit.healthcare.domain.Patient;
+import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.PatientService;
 import org.fasttrackit.healthcare.transfer.SavePatientRequest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,7 +43,26 @@ public class PatientServiceIntegrationTest {
         }
     }
 
-    private void createPatient() {
+    @Test
+    void getPatient_whenExistingPatient_thenReturnPatient(){
+        Patient patient = createPatient();
+
+        Patient response = patientService.getPatient(patient.getId());
+
+        assertThat(patient, notNullValue());
+        assertThat(response.getId(), is(patient.getId()));
+        assertThat(response.getBirthDate(), is(patient.getBirthDate()));
+        assertThat(response.getPhoneNumber(), is(patient.getPhoneNumber()));
+        assertThat(response.getLastName(), is(patient.getLastName()));
+        assertThat(response.getFirstName(), is(patient.getFirstName()));
+    }
+
+    @Test
+    void getPatient_whenNonExistingPatient_thenThrowResourceNotFoundException(){
+        Assertions.assertThrows(ResourceNotFoundException.class, ()-> patientService.getPatient(43435343));
+    }
+
+    private Patient createPatient() {
         SavePatientRequest request = new SavePatientRequest();
         request.setFirstName("Cristi");
         request.setLastName("Cristea");
@@ -56,5 +77,6 @@ public class PatientServiceIntegrationTest {
         assertThat(patient.getLastName(),is(request.getLastName()));
         assertThat(patient.getPhoneNumber(), is(request.getPhoneNumber()));
         assertThat(patient.getBirthDate(), is(request.getBirthDate()));
+        return patient;
     }
 }
