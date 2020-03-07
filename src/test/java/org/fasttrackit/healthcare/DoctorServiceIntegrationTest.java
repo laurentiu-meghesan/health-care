@@ -6,6 +6,9 @@ import org.fasttrackit.healthcare.transfer.SaveDoctorRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.TransactionSystemException;
+
+import javax.validation.ConstraintViolationException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -21,6 +24,25 @@ public class DoctorServiceIntegrationTest {
     @Test
     void createDoctor_whenValidRequest_thenDoctorIsCreated() {
 
+        createDoctor();
+    }
+
+    @Test
+    void createDoctor_whenMissingFirstName_thenExceptionIsThrown(){
+        SaveDoctorRequest request = new SaveDoctorRequest();
+        request.setLastName("Gigi");
+        request.setPhoneNumber("0744747474");
+        request.setOfficeAddress("Strada Lunga");
+
+        try {
+            doctorService.createDoctor(request);
+        }catch (Exception e){
+            assertThat(request, notNullValue());
+            assertThat("Unexpected exception type.", e instanceof ConstraintViolationException);
+        }
+    }
+
+    private Doctor createDoctor() {
         SaveDoctorRequest request = new SaveDoctorRequest();
         request.setFirstName("Iulian");
         request.setLastName("Ionescu");
@@ -35,5 +57,6 @@ public class DoctorServiceIntegrationTest {
         assertThat(doctor.getLastName(), is(request.getLastName()));
         assertThat(doctor.getPhoneNumber(), is(request.getPhoneNumber()));
         assertThat(doctor.getOfficeAddress(), is(request.getOfficeAddress()));
+        return doctor;
     }
 }

@@ -6,7 +6,7 @@ public class SaveAppointmentRequest {
     @NotNull
     private LocalDateTime appointmentDate;
     @NotNull
-    private long patientID;
+    private Long patientID;
     private String symptoms;
     private String diagnostic;
     private String treatment;

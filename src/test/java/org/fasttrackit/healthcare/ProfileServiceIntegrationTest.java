@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.validation.ConstraintViolationException;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,6 +22,26 @@ public class ProfileServiceIntegrationTest {
 
     @Test
     void createProfile_whenValidRequest_thenProfileIsCreated(){
+        createProfile();
+    }
+
+    @Test
+    void createProfile_whenMissingUserId_thenExceptionIsThrown(){
+        SaveProfileRequest request = new SaveProfileRequest();
+        request.setDoctor(false);
+        request.setEmail("abc@xyz.com");
+        request.setUserName("Jonathan");
+        request.setPassword("12345678");
+
+        try {
+            profileService.createProfile(request);
+        }catch (Exception e){
+            assertThat(request, notNullValue());
+            assertThat("Unexpected exception type.", e instanceof NullPointerException);
+        }
+    }
+
+    private void createProfile() {
         SaveProfileRequest request = new SaveProfileRequest();
         request.setUserId(1L);
         request.setUserName("guru2005");

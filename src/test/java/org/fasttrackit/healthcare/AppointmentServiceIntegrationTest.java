@@ -1,13 +1,15 @@
 package org.fasttrackit.healthcare;
 
 import org.fasttrackit.healthcare.domain.Appointment;
+import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.AppointmentService;
 import org.fasttrackit.healthcare.transfer.SaveAppointmentRequest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.TransactionSystemException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -23,6 +25,48 @@ public class AppointmentServiceIntegrationTest {
 
     @Test
     void createAppointment_whenValidRequest_thenAppointmentIsCreated() {
+        createAppointment();
+    }
+
+    @Test
+    void createAppointment_whenMissingAppointmentDate_thenExceptionIsThrown() {
+        SaveAppointmentRequest request = new SaveAppointmentRequest();
+        request.setPatientID(1L);
+        request.setSymptoms("febra");
+        request.setDiagnostic("gripa");
+        request.setTreatment("paracetamol");
+        request.setRecommendations("ceai");
+
+        try {
+            appointmentService.createAppointment(request);
+        } catch (Exception e) {
+            assertThat(e, notNullValue());
+            assertThat("Unexpected exception type.", e instanceof ConstraintViolationException);
+        }
+    }
+
+    @Test
+    void getAppointment_whenExistingAppointment_thenReturnAppointment() {
+        Appointment appointment = createAppointment();
+
+        Appointment response = appointmentService.getAppointment(appointment.getId());
+
+        assertThat(response, notNullValue());
+        assertThat(response.getId(), is(appointment.getId()));
+        assertThat(response.getAppointmentDate(), is(appointment.getAppointmentDate()));
+        assertThat(response.getPatientId(), is(appointment.getPatientId()));
+        assertThat(response.getSymptoms(), is(appointment.getSymptoms()));
+        assertThat(response.getDiagnostic(), is(appointment.getDiagnostic()));
+        assertThat(response.getTreatment(), is(appointment.getTreatment()));
+        assertThat(response.getRecommendations(), is(appointment.getRecommendations()));
+    }
+
+    @Test
+    void getAppointment_whenNonExistingAppointment_thenThrowResourceNotFoundException() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> appointmentService.getAppointment(101256565L));
+    }
+
+    private Appointment createAppointment() {
         SaveAppointmentRequest request = new SaveAppointmentRequest();
         request.setAppointmentDate(LocalDateTime.of
                 (2020, 8, 10, 12, 30));
@@ -40,23 +84,6 @@ public class AppointmentServiceIntegrationTest {
         assertThat(appointment.getDiagnostic(), is(request.getDiagnostic()));
         assertThat(appointment.getRecommendations(), is(request.getRecommendations()));
         assertThat(appointment.getAppointmentDate(), is(request.getAppointmentDate()));
+        return appointment;
     }
-
-    @Test
-    void createAppointment_whenMissingAppointmentDate_then_ExceptionIsThrown(){
-        SaveAppointmentRequest request = new SaveAppointmentRequest();
-        request.setPatientID(1L);
-        request.setSymptoms("febra");
-        request.setDiagnostic("gripa");
-        request.setTreatment("paracetamol");
-        request.setRecommendations("ceai");
-
-        try {
-            appointmentService.createAppointment(request);
-        } catch (Exception e) {
-            assertThat(e, notNullValue());
-            assertThat("Unexpected exception type.", e instanceof TransactionSystemException);
-        }
-    }
-
 }

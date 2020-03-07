@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class SaveChatRequest {
     @NotNull
-    private long patientId;
+    private Long patientId;
     @NotNull
     private String messageSent;
     @NotNull

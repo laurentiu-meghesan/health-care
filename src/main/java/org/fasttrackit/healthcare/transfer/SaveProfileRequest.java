@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class SaveProfileRequest {
     @NotNull
-    private long userId;
+    private Long userId;
     @NotNull
     private String userName;
     @NotNull

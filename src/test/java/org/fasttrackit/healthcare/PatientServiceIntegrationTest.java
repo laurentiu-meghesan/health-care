@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -22,6 +23,25 @@ public class PatientServiceIntegrationTest {
 
     @Test
     void createPatient_whenValidRequest_thenPatientIsCreated(){
+        createPatient();
+    }
+
+    @Test
+    void createPatient_whenMissingBirthDate_thenExceptionIsThrown(){
+        SavePatientRequest request = new SavePatientRequest();
+        request.setFirstName("Ion");
+        request.setLastName("Ionesco");
+        request.setPhoneNumber("077774484");
+
+        try {
+            patientService.createPatient(request);
+        }catch (Exception e){
+            assertThat(request, notNullValue());
+            assertThat("Unexpected exception type.", e instanceof ConstraintViolationException);
+        }
+    }
+
+    private void createPatient() {
         SavePatientRequest request = new SavePatientRequest();
         request.setFirstName("Cristi");
         request.setLastName("Cristea");

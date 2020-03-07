@@ -3,6 +3,7 @@ package org.fasttrackit.healthcare;
 import org.fasttrackit.healthcare.domain.Chat;
 import org.fasttrackit.healthcare.service.ChatService;
 import org.fasttrackit.healthcare.transfer.SaveChatRequest;
+import org.fasttrackit.healthcare.transfer.SaveProfileRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,25 @@ public class ChatServiceIntegrationTest {
 
     @Test
     void createChat_whenValidRequest_thenChatIsCreated(){
+        createChat();
+    }
+
+    @Test
+    void createChat_whenMissingPatientId_thenExceptionIsThrown(){
+        SaveChatRequest request = new SaveChatRequest();
+        request.setMessageDate(LocalDateTime.of(2020,03,01,10,42));
+        request.setMessageSent("Hello!");
+        request.setMessageReceived("Yuhu!");
+
+        try{
+            chatService.createChat(request);
+        }catch (Exception e){
+            assertThat(e, notNullValue());
+            assertThat("Unexpected exception type.", e instanceof NullPointerException);
+        }
+    }
+
+    private Chat createChat() {
         SaveChatRequest request = new SaveChatRequest();
         request.setMessageDate(LocalDateTime.of(2020, 03,05,19,30));
         request.setPatientId(10L);
@@ -35,6 +55,6 @@ public class ChatServiceIntegrationTest {
         assertThat(chat.getMessageDate(), is(request.getMessageDate()));
         assertThat(chat.getMessageSent(), is(request.getMessageSent()));
         assertThat(chat.getMessageReceived(), is(request.getMessageReceived()));
+        return chat;
     }
-
 }

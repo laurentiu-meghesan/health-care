@@ -1,5 +1,6 @@
 package org.fasttrackit.healthcare.service;
 import org.fasttrackit.healthcare.domain.Doctor;
+import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.DoctorRepository;
 import org.fasttrackit.healthcare.transfer.SaveDoctorRequest;
 import org.slf4j.Logger;
@@ -27,5 +28,12 @@ public class DoctorService {
         doctor.setPhoneNumber(request.getPhoneNumber());
         doctor.setOfficeAddress(request.getOfficeAddress());
         return doctorRepository.save(doctor);
+    }
+
+    public Doctor getDoctor(long id){
+        LOGGER.info("Retrieving Doctor {}", id);
+
+        return doctorRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Doctor " + id + " not found."));
     }
 }

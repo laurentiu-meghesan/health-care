@@ -1,5 +1,7 @@
 package org.fasttrackit.healthcare.service;
+
 import org.fasttrackit.healthcare.domain.Chat;
+import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.ChatRepository;
 import org.fasttrackit.healthcare.transfer.SaveChatRequest;
 import org.slf4j.Logger;
@@ -14,11 +16,11 @@ public class ChatService {
     private final ChatRepository chatRepository;
 
     @Autowired
-    public ChatService(ChatRepository chatRepository){
+    public ChatService(ChatRepository chatRepository) {
         this.chatRepository = chatRepository;
     }
 
-    public Chat createChat (SaveChatRequest request){
+    public Chat createChat(SaveChatRequest request) {
         LOGGER.info("Creating chat {}", request);
         Chat chat = new Chat();
         chat.setPatientId(request.getPatientId());
@@ -28,4 +30,10 @@ public class ChatService {
         return chatRepository.save(chat);
     }
 
+    public Chat getChat(long id) {
+        LOGGER.info("Retrieving message {}", id);
+
+        return chatRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Message" + id + " not found."));
+    }
 }

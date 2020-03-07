@@ -1,5 +1,6 @@
 package org.fasttrackit.healthcare.service;
 import org.fasttrackit.healthcare.domain.Profile;
+import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.ProfileRepository;
 import org.fasttrackit.healthcare.transfer.SaveProfileRequest;
 import org.slf4j.Logger;
@@ -28,5 +29,11 @@ public class ProfileService {
         profile.setEmail(request.getEmail());
         profile.setDoctor(request.isDoctor());
         return profileRepository.save(profile);
+    }
+
+    public Profile getProfile(long id){
+        LOGGER.info("Retrieving Profile {}", id);
+        return profileRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("Profile " + id + " not found."));
     }
 }
