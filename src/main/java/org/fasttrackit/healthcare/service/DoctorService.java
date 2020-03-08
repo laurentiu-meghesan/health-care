@@ -5,6 +5,7 @@ import org.fasttrackit.healthcare.persistance.DoctorRepository;
 import org.fasttrackit.healthcare.transfer.SaveDoctorRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,17 @@ public class DoctorService {
 
         return doctorRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Doctor " + id + " not found."));
+    }
+
+    public Doctor updateDoctor(long id, SaveDoctorRequest request){
+        LOGGER.info("Updating doctor {}", id);
+        Doctor doctor = getDoctor(id);
+        BeanUtils.copyProperties(request, doctor);
+        return doctorRepository.save(doctor);
+    }
+
+    public void deleteDoctor(long id){
+        LOGGER.info("Deleting doctor {}", id);
+        doctorRepository.deleteById(id);
     }
 }

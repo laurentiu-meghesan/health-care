@@ -5,6 +5,7 @@ import org.fasttrackit.healthcare.persistance.ProfileRepository;
 import org.fasttrackit.healthcare.transfer.SaveProfileRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,18 @@ public class ProfileService {
         LOGGER.info("Retrieving Profile {}", id);
         return profileRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("Profile " + id + " not found."));
+    }
+
+    public Profile updateProfile(long id, SaveProfileRequest request){
+        LOGGER.info("Updating profile {}", id);
+        Profile profile = getProfile(id);
+
+        BeanUtils.copyProperties(request, profile);
+        return  profileRepository.save(profile);
+    }
+
+    public void deleteProfile(long id){
+        LOGGER.info("Deleting profile {}", id);
+        profileRepository.deleteById(id);
     }
 }

@@ -6,6 +6,7 @@ import org.fasttrackit.healthcare.persistance.ChatRepository;
 import org.fasttrackit.healthcare.transfer.SaveChatRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,18 @@ public class ChatService {
 
         return chatRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Message" + id + " not found."));
+    }
+
+    public Chat updateChat(long id, SaveChatRequest request) {
+        LOGGER.info("Updated chat {}: {}", id, request);
+        Chat chat = getChat(id);
+
+        BeanUtils.copyProperties(request, chat);
+        return chatRepository.save(chat);
+    }
+
+    public void deleteChat(long id) {
+        LOGGER.info("Deleting chat {}", id);
+        chatRepository.deleteById(id);
     }
 }

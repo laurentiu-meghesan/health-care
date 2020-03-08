@@ -5,6 +5,7 @@ import org.fasttrackit.healthcare.persistance.AppointmentRepository;
 import org.fasttrackit.healthcare.transfer.SaveAppointmentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,4 +41,18 @@ public class AppointmentService {
         return appointmentRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Appointment " + id + " not found."));
     }
+
+    public Appointment updateAppointment(long id, SaveAppointmentRequest request){
+        LOGGER.info("Updated appointment {}: {}", id, request);
+        Appointment appointment = getAppointment(id);
+
+        BeanUtils.copyProperties(request, appointment);
+        return appointmentRepository.save(appointment);
+    }
+
+    public void deleteAppointment(long id){
+        LOGGER.info("Deleting appointment {}", id);
+        appointmentRepository.deleteById(id);
+    }
+
 }
