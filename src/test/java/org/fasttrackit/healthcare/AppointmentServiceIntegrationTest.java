@@ -67,7 +67,7 @@ public class AppointmentServiceIntegrationTest {
     }
 
     @Test
-    void updateAppointment_whenValidRequest_thenUpdateAppointment(){
+    void updateAppointment_whenValidRequest_thenUpdateAppointment() {
         Appointment appointment = createAppointment();
 
         SaveAppointmentRequest request = new SaveAppointmentRequest();
@@ -91,12 +91,12 @@ public class AppointmentServiceIntegrationTest {
     }
 
     @Test
-    void deleteAppointment_whenExistingAppointment_thenTheAppointmentDoesNotExistAnymore(){
+    void deleteAppointment_whenExistingAppointment_thenTheAppointmentDoesNotExistAnymore() {
         Appointment appointment = createAppointment();
 
         appointmentService.deleteAppointment(appointment.getId());
 
-        Assertions.assertThrows(ResourceNotFoundException.class, ()-> appointmentService.getAppointment(appointment.getId()));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> appointmentService.getAppointment(appointment.getId()));
     }
 
     private Appointment createAppointment() {

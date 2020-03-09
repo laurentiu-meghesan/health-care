@@ -16,7 +16,7 @@ public class SaveChatRequest {
         return patientId;
     }
 
-    public void setPatientId(long patientId) {
+    public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }
 

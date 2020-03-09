@@ -24,7 +24,7 @@ public class SaveAppointmentRequest {
         return patientID;
     }
 
-    public void setPatientID(long patientID) {
+    public void setPatientID(Long patientID) {
         this.patientID = patientID;
     }
 

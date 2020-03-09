@@ -24,12 +24,12 @@ public class PatientServiceIntegrationTest {
     private PatientService patientService;
 
     @Test
-    void createPatient_whenValidRequest_thenPatientIsCreated(){
+    void createPatient_whenValidRequest_thenPatientIsCreated() {
         createPatient();
     }
 
     @Test
-    void createPatient_whenMissingBirthDate_thenExceptionIsThrown(){
+    void createPatient_whenMissingBirthDate_thenExceptionIsThrown() {
         SavePatientRequest request = new SavePatientRequest();
         request.setFirstName("Ion");
         request.setLastName("Ionesco");
@@ -37,14 +37,14 @@ public class PatientServiceIntegrationTest {
 
         try {
             patientService.createPatient(request);
-        }catch (Exception e){
+        } catch (Exception e) {
             assertThat(request, notNullValue());
             assertThat("Unexpected exception type.", e instanceof ConstraintViolationException);
         }
     }
 
     @Test
-    void getPatient_whenExistingPatient_thenReturnPatient(){
+    void getPatient_whenExistingPatient_thenReturnPatient() {
         Patient patient = createPatient();
 
         Patient response = patientService.getPatient(patient.getId());
@@ -58,12 +58,12 @@ public class PatientServiceIntegrationTest {
     }
 
     @Test
-    void getPatient_whenNonExistingPatient_thenThrowResourceNotFoundException(){
-        Assertions.assertThrows(ResourceNotFoundException.class, ()-> patientService.getPatient(43435343));
+    void getPatient_whenNonExistingPatient_thenThrowResourceNotFoundException() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> patientService.getPatient(43435343));
     }
 
     @Test
-    void updatePatient_whenValidRequest_thenReturnUpdatedPatient(){
+    void updatePatient_whenValidRequest_thenReturnUpdatedPatient() {
         Patient patient = createPatient();
 
         SavePatientRequest request = new SavePatientRequest();
@@ -83,7 +83,7 @@ public class PatientServiceIntegrationTest {
     }
 
     @Test
-    void deletePatient_whenExistingPatient_thenPatientDoesNotExistAnymore(){
+    void deletePatient_whenExistingPatient_thenPatientDoesNotExistAnymore() {
         Patient patient = createPatient();
 
         patientService.deletePatient(patient.getId());
@@ -96,14 +96,14 @@ public class PatientServiceIntegrationTest {
         request.setFirstName("Cristi");
         request.setLastName("Cristea");
         request.setPhoneNumber("0745890890");
-        request.setBirthDate(LocalDate.of(1990,10,11));
+        request.setBirthDate(LocalDate.of(1990, 10, 11));
 
         Patient patient = patientService.createPatient(request);
 
         assertThat(patient, notNullValue());
         assertThat(patient.getId(), greaterThan(0L));
         assertThat(patient.getFirstName(), is(request.getFirstName()));
-        assertThat(patient.getLastName(),is(request.getLastName()));
+        assertThat(patient.getLastName(), is(request.getLastName()));
         assertThat(patient.getPhoneNumber(), is(request.getPhoneNumber()));
         assertThat(patient.getBirthDate(), is(request.getBirthDate()));
         return patient;

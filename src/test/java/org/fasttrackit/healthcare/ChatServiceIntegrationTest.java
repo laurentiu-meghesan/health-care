@@ -84,7 +84,7 @@ public class ChatServiceIntegrationTest {
     }
 
     @Test
-    void deleteChat_whenExistingChat_thenChatDoesNotExistAnymore(){
+    void deleteChat_whenExistingChat_thenChatDoesNotExistAnymore() {
         Chat chat = createChat();
 
         chatService.deleteChat(chat.getId());
