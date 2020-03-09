@@ -59,6 +59,35 @@ public class ProfileServiceIntegrationTest {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> profileService.getProfile(500012));
     }
 
+    @Test
+    void updateProfile_whenValidRequest_thenReturnUpdatedProfile() {
+        Profile profile = createProfile();
+
+        SaveProfileRequest request = new SaveProfileRequest();
+        request.setUserId(profile.getUserId());
+        request.setUserName(profile.getUserName() + " updated.");
+        request.setPassword(profile.getPassword() + " updated.");
+        request.setEmail(profile.getEmail() + " updated.");
+
+        Profile updatedProfile = profileService.updateProfile(profile.getId(), request);
+
+        assertThat(updatedProfile, notNullValue());
+        assertThat(updatedProfile.getId(), is(profile.getId()));
+        assertThat(updatedProfile.getUserId(), is(profile.getUserId()));
+        assertThat(updatedProfile.getUserName(), is(request.getUserName()));
+        assertThat(updatedProfile.getPassword(), is(request.getPassword()));
+        assertThat(updatedProfile.getEmail(), is(request.getEmail()));
+    }
+
+    @Test
+    void deleteProfile_whenExistingProfile_thenProfileDoesNotExistAnymore() {
+        Profile profile = createProfile();
+
+        profileService.deleteProfile(profile.getId());
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> profileService.getProfile(profile.getId()));
+    }
+
     private Profile createProfile() {
         SaveProfileRequest request = new SaveProfileRequest();
         request.setUserId(1L);

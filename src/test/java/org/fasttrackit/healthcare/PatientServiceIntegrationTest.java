@@ -62,6 +62,35 @@ public class PatientServiceIntegrationTest {
         Assertions.assertThrows(ResourceNotFoundException.class, ()-> patientService.getPatient(43435343));
     }
 
+    @Test
+    void updatePatient_whenValidRequest_thenReturnUpdatedPatient(){
+        Patient patient = createPatient();
+
+        SavePatientRequest request = new SavePatientRequest();
+        request.setFirstName(patient.getFirstName() + " updated.");
+        request.setLastName(patient.getLastName() + " updated.");
+        request.setPhoneNumber(patient.getPhoneNumber() + " updated.");
+        request.setBirthDate(patient.getBirthDate().minusYears(2));
+
+        Patient updatedPatient = patientService.updatePatient(patient.getId(), request);
+
+        assertThat(updatedPatient, notNullValue());
+        assertThat(updatedPatient.getId(), is(patient.getId()));
+        assertThat(updatedPatient.getFirstName(), is(request.getFirstName()));
+        assertThat(updatedPatient.getLastName(), is(request.getLastName()));
+        assertThat(updatedPatient.getPhoneNumber(), is(request.getPhoneNumber()));
+        assertThat(updatedPatient.getBirthDate(), is(request.getBirthDate()));
+    }
+
+    @Test
+    void deletePatient_whenExistingPatient_thenPatientDoesNotExistAnymore(){
+        Patient patient = createPatient();
+
+        patientService.deletePatient(patient.getId());
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> patientService.getPatient(patient.getId()));
+    }
+
     private Patient createPatient() {
         SavePatientRequest request = new SavePatientRequest();
         request.setFirstName("Cristi");

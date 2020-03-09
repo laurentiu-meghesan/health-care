@@ -24,27 +24,27 @@ public class ChatServiceIntegrationTest {
     private ChatService chatService;
 
     @Test
-    void createChat_whenValidRequest_thenChatIsCreated(){
+    void createChat_whenValidRequest_thenChatIsCreated() {
         createChat();
     }
 
     @Test
-    void createChat_whenMissingPatientId_thenExceptionIsThrown(){
+    void createChat_whenMissingPatientId_thenExceptionIsThrown() {
         SaveChatRequest request = new SaveChatRequest();
-        request.setMessageDate(LocalDateTime.of(2020,03,01,10,42));
+        request.setMessageDate(LocalDateTime.of(2020, 03, 01, 10, 42));
         request.setMessageSent("Hello!");
         request.setMessageReceived("Yuhu!");
 
-        try{
+        try {
             chatService.createChat(request);
-        }catch (Exception e){
+        } catch (Exception e) {
             assertThat(e, notNullValue());
             assertThat("Unexpected exception type.", e instanceof NullPointerException);
         }
     }
 
     @Test
-    void getChat_whenExistingChat_thenReturnChat(){
+    void getChat_whenExistingChat_thenReturnChat() {
         Chat chat = createChat();
 
         Chat response = chatService.getChat(chat.getId());
@@ -59,13 +59,42 @@ public class ChatServiceIntegrationTest {
     }
 
     @Test
-    void getChat_whenNonExistingChat_thenThrowResourceNotFoundException(){
-        Assertions.assertThrows(ResourceNotFoundException.class, ()-> chatService.getChat(21520));
+    void getChat_whenNonExistingChat_thenThrowResourceNotFoundException() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> chatService.getChat(21520));
+    }
+
+    @Test
+    void updateChat_whenValidRequest_thenReturnUpdatedChat() {
+        Chat chat = createChat();
+
+        SaveChatRequest request = new SaveChatRequest();
+        request.setPatientId(chat.getPatientId());
+        request.setMessageDate(chat.getMessageDate().minusDays(3));
+        request.setMessageSent(chat.getMessageSent() + " updated.");
+        request.setMessageReceived(chat.getMessageReceived() + " updated.");
+
+        Chat updatedChat = chatService.updateChat(chat.getId(), request);
+
+        assertThat(updatedChat, notNullValue());
+        assertThat(updatedChat.getId(), is(chat.getId()));
+        assertThat(updatedChat.getPatientId(), is(chat.getPatientId()));
+        assertThat(updatedChat.getMessageDate(), is(request.getMessageDate()));
+        assertThat(updatedChat.getMessageSent(), is(request.getMessageSent()));
+        assertThat(updatedChat.getMessageReceived(), is(request.getMessageReceived()));
+    }
+
+    @Test
+    void deleteChat_whenExistingChat_thenChatDoesNotExistAnymore(){
+        Chat chat = createChat();
+
+        chatService.deleteChat(chat.getId());
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> chatService.getChat(chat.getId()));
     }
 
     private Chat createChat() {
         SaveChatRequest request = new SaveChatRequest();
-        request.setMessageDate(LocalDateTime.of(2020, 03,05,19,30));
+        request.setMessageDate(LocalDateTime.of(2020, 03, 05, 19, 30));
         request.setPatientId(10L);
         request.setMessageSent("Ciao!");
         request.setMessageReceived("Hello!");

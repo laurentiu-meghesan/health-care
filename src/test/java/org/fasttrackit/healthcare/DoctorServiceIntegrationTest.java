@@ -1,12 +1,13 @@
 package org.fasttrackit.healthcare;
 
 import org.fasttrackit.healthcare.domain.Doctor;
+import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.DoctorService;
 import org.fasttrackit.healthcare.transfer.SaveDoctorRequest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.TransactionSystemException;
 
 import javax.validation.ConstraintViolationException;
 
@@ -28,7 +29,7 @@ public class DoctorServiceIntegrationTest {
     }
 
     @Test
-    void createDoctor_whenMissingFirstName_thenExceptionIsThrown(){
+    void createDoctor_whenMissingFirstName_thenExceptionIsThrown() {
         SaveDoctorRequest request = new SaveDoctorRequest();
         request.setLastName("Gigi");
         request.setPhoneNumber("0744747474");
@@ -36,14 +37,14 @@ public class DoctorServiceIntegrationTest {
 
         try {
             doctorService.createDoctor(request);
-        }catch (Exception e){
+        } catch (Exception e) {
             assertThat(request, notNullValue());
             assertThat("Unexpected exception type.", e instanceof ConstraintViolationException);
         }
     }
 
     @Test
-    void getDoctor_whenExistingDoctor_thenReturnDoctor(){
+    void getDoctor_whenExistingDoctor_thenReturnDoctor() {
         Doctor doctor = createDoctor();
 
         Doctor response = doctorService.getDoctor(doctor.getId());
@@ -54,6 +55,34 @@ public class DoctorServiceIntegrationTest {
         assertThat(response.getLastName(), is(doctor.getLastName()));
         assertThat(response.getPhoneNumber(), is(doctor.getPhoneNumber()));
         assertThat(response.getOfficeAddress(), is(doctor.getOfficeAddress()));
+    }
+
+    @Test
+    void updateDoctor_whenExistingDoctor_thenReturnUpdatedDoctor() {
+        Doctor doctor = createDoctor();
+
+        SaveDoctorRequest request = new SaveDoctorRequest();
+        request.setFirstName(doctor.getFirstName() + " updated.");
+        request.setLastName(doctor.getLastName() + " updated.");
+        request.setOfficeAddress(doctor.getOfficeAddress() + " updated.");
+        request.setPhoneNumber(doctor.getPhoneNumber() + " updated.");
+
+        Doctor updatedDoctor = doctorService.updateDoctor(doctor.getId(), request);
+
+        assertThat(updatedDoctor, notNullValue());
+        assertThat(updatedDoctor.getFirstName(), is(request.getFirstName()));
+        assertThat(updatedDoctor.getLastName(), is(request.getLastName()));
+        assertThat(updatedDoctor.getOfficeAddress(), is(request.getOfficeAddress()));
+        assertThat(updatedDoctor.getPhoneNumber(), is(request.getPhoneNumber()));
+    }
+
+    @Test
+    void deleteDoctor_whenExistingDoctor_thenDoctorDoesNotExistAnymore() {
+        Doctor doctor = createDoctor();
+
+        doctorService.deleteDoctor(doctor.getId());
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> doctorService.getDoctor(doctor.getId()));
     }
 
     private Doctor createDoctor() {

@@ -66,6 +66,39 @@ public class AppointmentServiceIntegrationTest {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> appointmentService.getAppointment(101256565L));
     }
 
+    @Test
+    void updateAppointment_whenValidRequest_thenUpdateAppointment(){
+        Appointment appointment = createAppointment();
+
+        SaveAppointmentRequest request = new SaveAppointmentRequest();
+        request.setPatientID(appointment.getPatientId());
+        request.setTreatment(appointment.getTreatment() + " updated.");
+        request.setRecommendations(appointment.getRecommendations() + " updated.");
+        request.setDiagnostic(appointment.getDiagnostic() + " updated.");
+        request.setSymptoms(appointment.getSymptoms() + " updated.");
+        request.setAppointmentDate(appointment.getAppointmentDate().plusDays(10));
+
+        Appointment updatedAppointment = appointmentService.updateAppointment(appointment.getId(), request);
+
+        assertThat(updatedAppointment, notNullValue());
+        assertThat(updatedAppointment.getId(), is(appointment.getId()));
+        assertThat(updatedAppointment.getAppointmentDate(), is(request.getAppointmentDate()));
+        assertThat(updatedAppointment.getSymptoms(), is(request.getSymptoms()));
+        assertThat(updatedAppointment.getDiagnostic(), is(request.getDiagnostic()));
+        assertThat(updatedAppointment.getPatientId(), is(request.getPatientID()));
+        assertThat(updatedAppointment.getTreatment(), is(request.getTreatment()));
+        assertThat(updatedAppointment.getRecommendations(), is(request.getRecommendations()));
+    }
+
+    @Test
+    void deleteAppointment_whenExistingAppointment_thenTheAppointmentDoesNotExistAnymore(){
+        Appointment appointment = createAppointment();
+
+        appointmentService.deleteAppointment(appointment.getId());
+
+        Assertions.assertThrows(ResourceNotFoundException.class, ()-> appointmentService.getAppointment(appointment.getId()));
+    }
+
     private Appointment createAppointment() {
         SaveAppointmentRequest request = new SaveAppointmentRequest();
         request.setAppointmentDate(LocalDateTime.of
