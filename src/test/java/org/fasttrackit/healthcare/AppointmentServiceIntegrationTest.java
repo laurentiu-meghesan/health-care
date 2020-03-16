@@ -3,7 +3,7 @@ package org.fasttrackit.healthcare;
 import org.fasttrackit.healthcare.domain.Appointment;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.AppointmentService;
-import org.fasttrackit.healthcare.transfer.SaveAppointmentRequest;
+import org.fasttrackit.healthcare.transfer.appointment.SaveAppointmentRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

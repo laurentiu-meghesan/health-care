@@ -5,6 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
+
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-//    Page<Appointment> findByPatientId(Long patientId, Pageable pageable);
+    Page<Appointment> findByPatientId(Long patientId, Pageable pageable);
+    Page<Appointment> findByAppointmentDateOrderByAppointmentDate(LocalDateTime searchDate, Pageable pageable);
+
 }

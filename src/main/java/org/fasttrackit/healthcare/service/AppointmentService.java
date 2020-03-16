@@ -2,14 +2,15 @@ package org.fasttrackit.healthcare.service;
 import org.fasttrackit.healthcare.domain.Appointment;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.AppointmentRepository;
-import org.fasttrackit.healthcare.transfer.SaveAppointmentRequest;
+import org.fasttrackit.healthcare.transfer.appointment.GetAppointmentsRequest;
+import org.fasttrackit.healthcare.transfer.appointment.SaveAppointmentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AppointmentService {
@@ -40,6 +41,20 @@ public class AppointmentService {
 
         return appointmentRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Appointment " + id + " not found."));
+    }
+
+    public Page<Appointment> getAppointments(GetAppointmentsRequest request, Pageable pageable){
+        LOGGER.info("Retrieving Appointments {}", request);
+
+        if(request != null){
+            if(request.getPatientId() != null){
+                return appointmentRepository.findByPatientId(request.getPatientId(), pageable);
+            } else if (request.getSearchDate() != null){
+                return appointmentRepository.findByAppointmentDateOrderByAppointmentDate
+                        (request.getSearchDate(), pageable);
+            }
+        }
+        return appointmentRepository.findAll(pageable);
     }
 
     public Appointment updateAppointment(long id, SaveAppointmentRequest request){

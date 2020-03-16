@@ -3,7 +3,7 @@ package org.fasttrackit.healthcare.service;
 import org.fasttrackit.healthcare.domain.Chat;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.ChatRepository;
-import org.fasttrackit.healthcare.transfer.SaveChatRequest;
+import org.fasttrackit.healthcare.transfer.chat.SaveChatRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

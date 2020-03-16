@@ -1,4 +1,4 @@
-package org.fasttrackit.healthcare.transfer;
+package org.fasttrackit.healthcare.transfer.profile;
 
 import javax.validation.constraints.NotNull;
 

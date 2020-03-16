@@ -2,7 +2,7 @@ package org.fasttrackit.healthcare.service;
 import org.fasttrackit.healthcare.domain.Doctor;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.DoctorRepository;
-import org.fasttrackit.healthcare.transfer.SaveDoctorRequest;
+import org.fasttrackit.healthcare.transfer.doctor.SaveDoctorRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
