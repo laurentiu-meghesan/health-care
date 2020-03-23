@@ -1,12 +1,16 @@
 package org.fasttrackit.healthcare.service;
+
 import org.fasttrackit.healthcare.domain.Patient;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.PatientRepository;
+import org.fasttrackit.healthcare.transfer.patient.GetPatientsRequest;
 import org.fasttrackit.healthcare.transfer.patient.SavePatientRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,21 +35,37 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
-    public Patient getPatient(long id){
+    public Patient getPatient(long id) {
         LOGGER.info("Retrieving Patient {}", id);
 
         return patientRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Patient " + id + " not found."));
     }
 
-    public Patient updatePatient(long id, SavePatientRequest request){
+    public Page<Patient> getPatients(GetPatientsRequest request, Pageable pageable) {
+        LOGGER.info("Retrieving Patients {}", request);
+
+        if (request != null) {
+            if(request.getPartialFirstName()!= null && request.getPartialLastName() != null){
+                return patientRepository.findByFirstNameContainingAndLastNameContaining(request.getPartialFirstName(),
+                        request.getPartialLastName(), pageable);
+            } else if (request.getPartialFirstName() != null){
+                return patientRepository.findByFirstNameContaining(request.getPartialFirstName(), pageable);
+            } else if (request.getPartialLastName() != null){
+                return patientRepository.findByLastNameContaining(request.getPartialLastName(), pageable);
+            }
+        }
+        return patientRepository.findAll(pageable);
+    }
+
+    public Patient updatePatient(long id, SavePatientRequest request) {
         LOGGER.info("Updating patient {}", id);
         Patient patient = getPatient(id);
-        BeanUtils.copyProperties(request,patient);
+        BeanUtils.copyProperties(request, patient);
         return patientRepository.save(patient);
     }
 
-    public void deletePatient(long id){
+    public void deletePatient(long id) {
         LOGGER.info("Deleting patient {}", id);
         patientRepository.deleteById(id);
     }
