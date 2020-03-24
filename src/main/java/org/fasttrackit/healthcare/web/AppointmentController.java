@@ -26,32 +26,32 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Appointment> createAppointment(@Valid @RequestBody SaveAppointmentRequest request){
+    public ResponseEntity<Appointment> createAppointment(@Valid @RequestBody SaveAppointmentRequest request) {
 
         Appointment appointment = appointmentService.createAppointment(request);
         return new ResponseEntity<>(appointment, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getAppointment(@PathVariable long id){
+    public ResponseEntity<Appointment> getAppointment(@PathVariable long id) {
         Appointment appointment = appointmentService.getAppointment(id);
         return new ResponseEntity<>(appointment, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<Page<Appointment>> getAppointments(GetAppointmentsRequest request, Pageable pageable){
+    public ResponseEntity<Page<Appointment>> getAppointments(GetAppointmentsRequest request, Pageable pageable) {
         Page<Appointment> appointments = appointmentService.getAppointments(request, pageable);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Appointment> updateAppointment(@PathVariable long id,@Valid @RequestBody SaveAppointmentRequest request){
+    public ResponseEntity<Appointment> updateAppointment(@PathVariable long id, @Valid @RequestBody SaveAppointmentRequest request) {
         Appointment appointment = appointmentService.updateAppointment(id, request);
         return new ResponseEntity<>(appointment, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAppointment(@PathVariable long id){
+    public ResponseEntity<Void> deleteAppointment(@PathVariable long id) {
         appointmentService.deleteAppointment(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
