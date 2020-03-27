@@ -1,5 +1,6 @@
 package org.fasttrackit.healthcare.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fasttrackit.healthcare.domain.Patient;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.PatientRepository;
@@ -19,19 +20,19 @@ public class PatientService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientService.class);
 
     private final PatientRepository patientRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public PatientService(PatientRepository patientRepository) {
+    public PatientService(PatientRepository patientRepository, ObjectMapper objectMapper) {
         this.patientRepository = patientRepository;
+        this.objectMapper = objectMapper;
     }
 
     public Patient createPatient(SavePatientRequest request) {
         LOGGER.info("Creating Patient {}", request);
-        Patient patient = new Patient();
-        patient.setFirstName(request.getFirstName());
-        patient.setLastName(request.getLastName());
-        patient.setBirthDate(request.getBirthDate());
-        patient.setPhoneNumber(request.getPhoneNumber());
+
+        Patient patient = objectMapper.convertValue(request, Patient.class);
+
         return patientRepository.save(patient);
     }
 

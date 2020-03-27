@@ -1,4 +1,6 @@
 package org.fasttrackit.healthcare.service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fasttrackit.healthcare.domain.Doctor;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.DoctorRepository;
@@ -15,37 +17,37 @@ public class DoctorService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorService.class);
 
     private final DoctorRepository doctorRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public DoctorService(DoctorRepository doctorRepository) {
+    public DoctorService(DoctorRepository doctorRepository, ObjectMapper objectMapper) {
         this.doctorRepository = doctorRepository;
+        this.objectMapper = objectMapper;
     }
 
-    public Doctor createDoctor(SaveDoctorRequest request){
+    public Doctor createDoctor(SaveDoctorRequest request) {
         LOGGER.info("Creating Doctor {}", request);
-        Doctor doctor = new Doctor();
-        doctor.setFirstName(request.getFirstName());
-        doctor.setLastName(request.getLastName());
-        doctor.setPhoneNumber(request.getPhoneNumber());
-        doctor.setOfficeAddress(request.getOfficeAddress());
+
+        Doctor doctor = objectMapper.convertValue(request, Doctor.class);
+
         return doctorRepository.save(doctor);
     }
 
-    public Doctor getDoctor(long id){
+    public Doctor getDoctor(long id) {
         LOGGER.info("Retrieving Doctor {}", id);
 
         return doctorRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Doctor " + id + " not found."));
     }
 
-    public Doctor updateDoctor(long id, SaveDoctorRequest request){
+    public Doctor updateDoctor(long id, SaveDoctorRequest request) {
         LOGGER.info("Updating doctor {}", id);
         Doctor doctor = getDoctor(id);
         BeanUtils.copyProperties(request, doctor);
         return doctorRepository.save(doctor);
     }
 
-    public void deleteDoctor(long id){
+    public void deleteDoctor(long id) {
         LOGGER.info("Deleting doctor {}", id);
         doctorRepository.deleteById(id);
     }
