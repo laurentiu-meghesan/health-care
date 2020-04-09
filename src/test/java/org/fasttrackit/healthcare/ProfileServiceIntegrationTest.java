@@ -3,6 +3,7 @@ package org.fasttrackit.healthcare;
 import org.fasttrackit.healthcare.domain.Profile;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.ProfileService;
+import org.fasttrackit.healthcare.steps.ProfileTestSteps;
 import org.fasttrackit.healthcare.transfer.profile.SaveProfileRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
 
 @SpringBootTest
 public class ProfileServiceIntegrationTest {
@@ -21,9 +21,12 @@ public class ProfileServiceIntegrationTest {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private ProfileTestSteps profileTestSteps;
+
     @Test
     void createProfile_whenValidRequest_thenProfileIsCreated() {
-        createProfile();
+        profileTestSteps.createProfile();
     }
 
     @Test
@@ -44,11 +47,10 @@ public class ProfileServiceIntegrationTest {
 
     @Test
     void getProfile_whenExistingProfile_thenReturnProfile() {
-        Profile profile = createProfile();
+        Profile profile = profileTestSteps.createProfile();
         Profile response = profileService.getProfile(profile.getId());
         assertThat(response, notNullValue());
         assertThat(response.getId(), is(profile.getId()));
-        assertThat(response.getUserId(), is(profile.getUserId()));
         assertThat(response.getUserName(), is(profile.getUserName()));
         assertThat(response.getPassword(), is(profile.getPassword()));
         assertThat(response.getEmail(), is(profile.getEmail()));
@@ -61,10 +63,9 @@ public class ProfileServiceIntegrationTest {
 
     @Test
     void updateProfile_whenValidRequest_thenReturnUpdatedProfile() {
-        Profile profile = createProfile();
+        Profile profile = profileTestSteps.createProfile();
 
         SaveProfileRequest request = new SaveProfileRequest();
-        request.setUserId(profile.getUserId());
         request.setUserName(profile.getUserName() + " updated.");
         request.setPassword(profile.getPassword() + " updated.");
         request.setEmail(profile.getEmail() + " updated.");
@@ -73,7 +74,6 @@ public class ProfileServiceIntegrationTest {
 
         assertThat(updatedProfile, notNullValue());
         assertThat(updatedProfile.getId(), is(profile.getId()));
-        assertThat(updatedProfile.getUserId(), is(profile.getUserId()));
         assertThat(updatedProfile.getUserName(), is(request.getUserName()));
         assertThat(updatedProfile.getPassword(), is(request.getPassword()));
         assertThat(updatedProfile.getEmail(), is(request.getEmail()));
@@ -81,29 +81,10 @@ public class ProfileServiceIntegrationTest {
 
     @Test
     void deleteProfile_whenExistingProfile_thenProfileDoesNotExistAnymore() {
-        Profile profile = createProfile();
+        Profile profile = profileTestSteps.createProfile();
 
         profileService.deleteProfile(profile.getId());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> profileService.getProfile(profile.getId()));
-    }
-
-    private Profile createProfile() {
-        SaveProfileRequest request = new SaveProfileRequest();
-        request.setUserId(1L);
-        request.setUserName("guru2005");
-        request.setPassword("1234abcd");
-        request.setEmail("abd@yahoo.com");
-        request.setDoctor(false);
-
-        Profile profile = profileService.createProfile(request);
-
-        assertThat(profile, notNullValue());
-        assertThat(profile.getId(), greaterThan(0L));
-        assertThat(profile.getUserId(), is(request.getUserId()));
-        assertThat(profile.getUserName(), is(request.getUserName()));
-        assertThat(profile.getPassword(), is(request.getPassword()));
-        assertThat(profile.getEmail(), is(request.getEmail()));
-        return profile;
     }
 }

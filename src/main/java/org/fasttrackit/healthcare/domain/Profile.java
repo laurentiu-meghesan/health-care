@@ -10,8 +10,6 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotNull
-    private long userId;
-    @NotNull
     private String userName;
     @NotNull
     private String password;
@@ -19,42 +17,12 @@ public class Profile {
     private String email;
     private boolean isDoctor;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Doctor doctor;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private Patient patient;
-
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 
     public String getUserName() {

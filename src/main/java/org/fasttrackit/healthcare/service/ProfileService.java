@@ -1,4 +1,5 @@
 package org.fasttrackit.healthcare.service;
+
 import org.fasttrackit.healthcare.domain.Profile;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.ProfileRepository;
@@ -24,10 +25,9 @@ public class ProfileService {
         this.profileRepository = profileRepository;
     }
 
-    public Profile createProfile(SaveProfileRequest request){
+    public Profile createProfile(SaveProfileRequest request) {
         LOGGER.info("Creating Profile {}", request);
         Profile profile = new Profile();
-        profile.setUserId(request.getUserId());
         profile.setUserName(request.getUserName());
         profile.setPassword(request.getPassword());
         profile.setEmail(request.getEmail());
@@ -35,30 +35,30 @@ public class ProfileService {
         return profileRepository.save(profile);
     }
 
-    public Profile getProfile(long id){
+    public Profile getProfile(long id) {
         LOGGER.info("Retrieving Profile {}", id);
-        return profileRepository.findById(id).orElseThrow(()->
+        return profileRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Profile " + id + " not found."));
     }
 
-    public Page<Profile> getProfiles(GetProfilesRequest request, Pageable pageable){
+    public Page<Profile> getProfiles(GetProfilesRequest request, Pageable pageable) {
         LOGGER.info("Retrieving Profiles {}", request);
 
-        if (request != null){
+        if (request != null) {
             return profileRepository.findByEmailContaining(request.getPartialEmail(), pageable);
         }
         return profileRepository.findAll(pageable);
     }
 
-    public Profile updateProfile(long id, SaveProfileRequest request){
+    public Profile updateProfile(long id, SaveProfileRequest request) {
         LOGGER.info("Updating profile {}", id);
         Profile profile = getProfile(id);
 
         BeanUtils.copyProperties(request, profile);
-        return  profileRepository.save(profile);
+        return profileRepository.save(profile);
     }
 
-    public void deleteProfile(long id){
+    public void deleteProfile(long id) {
         LOGGER.info("Deleting profile {}", id);
         profileRepository.deleteById(id);
     }

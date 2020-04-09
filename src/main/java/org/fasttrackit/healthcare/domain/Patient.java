@@ -1,9 +1,6 @@
 package org.fasttrackit.healthcare.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 //import java.time.Period;
@@ -12,7 +9,6 @@ import java.time.LocalDate;
 public class Patient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotNull
     private String firstName;
@@ -23,7 +19,15 @@ public class Patient {
     @NotNull
     private LocalDate birthDate;
 
-/*    private LocalDate currentDate = LocalDate.now();
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    private Profile profile;
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    /*    private LocalDate currentDate = LocalDate.now();
     private int patientAge = patientAge(getBirthDate(), currentDate);
 
     private static int patientAge(LocalDate birthDate, LocalDate currentDate) {
@@ -37,6 +41,10 @@ public class Patient {
     public int getPatientAge() {
         return patientAge;
     }*/
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 
     public long getId() {
         return id;
@@ -86,6 +94,7 @@ public class Patient {
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", birthDate=" + birthDate +
+                ", profile=" + profile +
                 '}';
     }
 }

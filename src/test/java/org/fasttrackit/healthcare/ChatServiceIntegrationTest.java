@@ -30,7 +30,7 @@ public class ChatServiceIntegrationTest {
     @Test
     void createChat_whenMissingPatientId_thenExceptionIsThrown() {
         SaveChatRequest request = new SaveChatRequest();
-        request.setMessageDate(LocalDateTime.of(2020, 03, 01, 10, 42));
+        request.setMessageDate(LocalDateTime.of(2020, 3, 1, 10, 42));
         request.setMessageSent("Hello!");
         request.setMessageReceived("Yuhu!");
 
@@ -93,7 +93,7 @@ public class ChatServiceIntegrationTest {
 
     private Chat createChat() {
         SaveChatRequest request = new SaveChatRequest();
-        request.setMessageDate(LocalDateTime.of(2020, 03, 05, 19, 30));
+        request.setMessageDate(LocalDateTime.of(2020, 3, 5, 19, 30));
         request.setPatientId(10L);
         request.setMessageSent("Ciao!");
         request.setMessageReceived("Hello!");

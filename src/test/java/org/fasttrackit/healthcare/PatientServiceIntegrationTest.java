@@ -1,36 +1,43 @@
 package org.fasttrackit.healthcare;
 
 import org.fasttrackit.healthcare.domain.Patient;
+import org.fasttrackit.healthcare.domain.Profile;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.PatientService;
+import org.fasttrackit.healthcare.steps.PatientTestSteps;
+import org.fasttrackit.healthcare.steps.ProfileTestSteps;
 import org.fasttrackit.healthcare.transfer.patient.SavePatientRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.validation.ConstraintViolationException;
-import java.time.LocalDate;
+import org.springframework.transaction.TransactionSystemException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
 
 @SpringBootTest
 public class PatientServiceIntegrationTest {
 
     @Autowired
     private PatientService patientService;
+    @Autowired
+    private PatientTestSteps patientTestSteps;
+    @Autowired
+    private ProfileTestSteps profileTestSteps;
 
     @Test
     void createPatient_whenValidRequest_thenPatientIsCreated() {
-        createPatient();
+        patientTestSteps.createPatient();
     }
 
     @Test
     void createPatient_whenMissingBirthDate_thenExceptionIsThrown() {
+        Profile profile = profileTestSteps.createProfile();
+
         SavePatientRequest request = new SavePatientRequest();
+        request.setProfileId(profile.getId());
         request.setFirstName("Ion");
         request.setLastName("Ionesco");
         request.setPhoneNumber("077774484");
@@ -39,13 +46,13 @@ public class PatientServiceIntegrationTest {
             patientService.createPatient(request);
         } catch (Exception e) {
             assertThat(request, notNullValue());
-            assertThat("Unexpected exception type.", e instanceof ConstraintViolationException);
+            assertThat("Unexpected exception type.", e instanceof TransactionSystemException);
         }
     }
 
     @Test
     void getPatient_whenExistingPatient_thenReturnPatient() {
-        Patient patient = createPatient();
+        Patient patient = patientTestSteps.createPatient();
 
         Patient response = patientService.getPatient(patient.getId());
 
@@ -64,7 +71,7 @@ public class PatientServiceIntegrationTest {
 
     @Test
     void updatePatient_whenValidRequest_thenReturnUpdatedPatient() {
-        Patient patient = createPatient();
+        Patient patient = patientTestSteps.createPatient();
 
         SavePatientRequest request = new SavePatientRequest();
         request.setFirstName(patient.getFirstName() + " updated.");
@@ -84,28 +91,10 @@ public class PatientServiceIntegrationTest {
 
     @Test
     void deletePatient_whenExistingPatient_thenPatientDoesNotExistAnymore() {
-        Patient patient = createPatient();
+        Patient patient = patientTestSteps.createPatient();
 
         patientService.deletePatient(patient.getId());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> patientService.getPatient(patient.getId()));
-    }
-
-    private Patient createPatient() {
-        SavePatientRequest request = new SavePatientRequest();
-        request.setFirstName("Cristi");
-        request.setLastName("Cristea");
-        request.setPhoneNumber("0745890890");
-        request.setBirthDate(LocalDate.of(1990, 10, 11));
-
-        Patient patient = patientService.createPatient(request);
-
-        assertThat(patient, notNullValue());
-        assertThat(patient.getId(), greaterThan(0L));
-        assertThat(patient.getFirstName(), is(request.getFirstName()));
-        assertThat(patient.getLastName(), is(request.getLastName()));
-        assertThat(patient.getPhoneNumber(), is(request.getPhoneNumber()));
-        assertThat(patient.getBirthDate(), is(request.getBirthDate()));
-        return patient;
     }
 }

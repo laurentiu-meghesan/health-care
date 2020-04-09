@@ -1,4 +1,5 @@
 package org.fasttrackit.healthcare.transfer.patient;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -11,6 +12,15 @@ public class SavePatientRequest {
     private String phoneNumber;
     @NotNull
     private LocalDate birthDate;
+    private long profileId;
+
+    public long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(long profileId) {
+        this.profileId = profileId;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -51,6 +61,7 @@ public class SavePatientRequest {
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", birthDate=" + birthDate +
+                ", profileId=" + profileId +
                 '}';
     }
 }

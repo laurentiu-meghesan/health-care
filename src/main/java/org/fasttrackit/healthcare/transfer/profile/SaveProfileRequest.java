@@ -4,22 +4,12 @@ import javax.validation.constraints.NotNull;
 
 public class SaveProfileRequest {
     @NotNull
-    private Long userId;
-    @NotNull
     private String userName;
     @NotNull
     private String password;
     @NotNull
     private String email;
     private boolean isDoctor;
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getUserName() {
         return userName;

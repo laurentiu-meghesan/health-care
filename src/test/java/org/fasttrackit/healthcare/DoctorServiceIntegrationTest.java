@@ -1,20 +1,21 @@
 package org.fasttrackit.healthcare;
 
 import org.fasttrackit.healthcare.domain.Doctor;
+import org.fasttrackit.healthcare.domain.Profile;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.DoctorService;
+import org.fasttrackit.healthcare.steps.DoctorTestSteps;
+import org.fasttrackit.healthcare.steps.ProfileTestSteps;
 import org.fasttrackit.healthcare.transfer.doctor.SaveDoctorRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.validation.ConstraintViolationException;
+import org.springframework.transaction.TransactionSystemException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
 
 @SpringBootTest
 public class DoctorServiceIntegrationTest {
@@ -22,30 +23,39 @@ public class DoctorServiceIntegrationTest {
     @Autowired
     private DoctorService doctorService;
 
+    @Autowired
+    private ProfileTestSteps profileTestSteps;
+
+    @Autowired
+    private DoctorTestSteps doctorTestSteps;
+
     @Test
     void createDoctor_whenValidRequest_thenDoctorIsCreated() {
 
-        createDoctor();
+        doctorTestSteps.createDoctor();
     }
 
     @Test
     void createDoctor_whenMissingFirstName_thenExceptionIsThrown() {
+        Profile profile = profileTestSteps.createProfile();
+
         SaveDoctorRequest request = new SaveDoctorRequest();
-        request.setLastName("Gigi");
-        request.setPhoneNumber("0744747474");
-        request.setOfficeAddress("Strada Lunga");
+        request.setProfileId(profile.getId());
+        request.setLastName("Ionescu");
+        request.setPhoneNumber("+40744123456");
+        request.setOfficeAddress("Calea Manastur nr 4");
 
         try {
             doctorService.createDoctor(request);
         } catch (Exception e) {
             assertThat(request, notNullValue());
-            assertThat("Unexpected exception type.", e instanceof ConstraintViolationException);
+            assertThat("Unexpected exception type.", e instanceof TransactionSystemException);
         }
     }
 
     @Test
     void getDoctor_whenExistingDoctor_thenReturnDoctor() {
-        Doctor doctor = createDoctor();
+        Doctor doctor = doctorTestSteps.createDoctor();
 
         Doctor response = doctorService.getDoctor(doctor.getId());
 
@@ -59,7 +69,7 @@ public class DoctorServiceIntegrationTest {
 
     @Test
     void updateDoctor_whenExistingDoctor_thenReturnUpdatedDoctor() {
-        Doctor doctor = createDoctor();
+        Doctor doctor = doctorTestSteps.createDoctor();
 
         SaveDoctorRequest request = new SaveDoctorRequest();
         request.setFirstName(doctor.getFirstName() + " updated.");
@@ -78,28 +88,10 @@ public class DoctorServiceIntegrationTest {
 
     @Test
     void deleteDoctor_whenExistingDoctor_thenDoctorDoesNotExistAnymore() {
-        Doctor doctor = createDoctor();
+        Doctor doctor = doctorTestSteps.createDoctor();
 
         doctorService.deleteDoctor(doctor.getId());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> doctorService.getDoctor(doctor.getId()));
-    }
-
-    private Doctor createDoctor() {
-        SaveDoctorRequest request = new SaveDoctorRequest();
-        request.setFirstName("Iulian");
-        request.setLastName("Ionescu");
-        request.setPhoneNumber("+40744123456");
-        request.setOfficeAddress("Calea Manastur nr 4");
-
-        Doctor doctor = doctorService.createDoctor(request);
-
-        assertThat(doctor, notNullValue());
-        assertThat(doctor.getId(), greaterThan(0L));
-        assertThat(doctor.getFirstName(), is(request.getFirstName()));
-        assertThat(doctor.getLastName(), is(request.getLastName()));
-        assertThat(doctor.getPhoneNumber(), is(request.getPhoneNumber()));
-        assertThat(doctor.getOfficeAddress(), is(request.getOfficeAddress()));
-        return doctor;
     }
 }

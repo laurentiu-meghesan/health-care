@@ -1,16 +1,12 @@
 package org.fasttrackit.healthcare.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class Doctor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotNull
     private String firstName;
@@ -20,6 +16,19 @@ public class Doctor {
     private String phoneNumber;
     @NotNull
     private String officeAddress;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    private Profile profile;
+
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 
     public long getId() {
         return id;
@@ -69,6 +78,7 @@ public class Doctor {
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", officeAddress='" + officeAddress + '\'' +
+                ", profile=" + profile +
                 '}';
     }
 }
