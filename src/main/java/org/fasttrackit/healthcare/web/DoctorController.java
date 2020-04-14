@@ -1,7 +1,7 @@
 package org.fasttrackit.healthcare.web;
 
-import org.fasttrackit.healthcare.domain.Doctor;
 import org.fasttrackit.healthcare.service.DoctorService;
+import org.fasttrackit.healthcare.transfer.doctor.DoctorResponse;
 import org.fasttrackit.healthcare.transfer.doctor.SaveDoctorRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,20 +23,20 @@ public class DoctorController {
     }
 
     @PostMapping
-    public ResponseEntity<Doctor> createDoctor(@Valid @RequestBody SaveDoctorRequest request) {
-        Doctor doctor = doctorService.createDoctor(request);
+    public ResponseEntity<DoctorResponse> createDoctor(@Valid @RequestBody SaveDoctorRequest request) {
+        DoctorResponse doctor = doctorService.createDoctor(request);
         return new ResponseEntity<>(doctor, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDoctor(@PathVariable long id) {
-        Doctor doctor = doctorService.getDoctor(id);
+    public ResponseEntity<DoctorResponse> getDoctor(@PathVariable long id) {
+        DoctorResponse doctor = doctorService.getDoctor(id);
         return new ResponseEntity<>(doctor, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable long id, @Valid @RequestBody SaveDoctorRequest request) {
-        Doctor doctor = doctorService.updateDoctor(id, request);
+    public ResponseEntity<DoctorResponse> updateDoctor(@PathVariable long id, @Valid @RequestBody SaveDoctorRequest request) {
+        DoctorResponse doctor = doctorService.updateDoctor(id, request);
         return new ResponseEntity<>(doctor, HttpStatus.OK);
     }
 

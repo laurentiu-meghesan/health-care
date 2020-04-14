@@ -3,6 +3,7 @@ package org.fasttrackit.healthcare.steps;
 import org.fasttrackit.healthcare.domain.Patient;
 import org.fasttrackit.healthcare.domain.Profile;
 import org.fasttrackit.healthcare.service.PatientService;
+import org.fasttrackit.healthcare.transfer.patient.PatientResponse;
 import org.fasttrackit.healthcare.transfer.patient.SavePatientRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class PatientTestSteps {
     @Autowired
     private ProfileTestSteps profileTestSteps;
 
-    public Patient createPatient() {
+    public PatientResponse createPatient() {
         Profile profile = profileTestSteps.createProfile();
         profile.setDoctor(false);
 
@@ -33,7 +34,7 @@ public class PatientTestSteps {
         request.setPhoneNumber("0745890890");
         request.setBirthDate(LocalDate.of(1990, 10, 11));
 
-        Patient patient = patientService.createPatient(request);
+        PatientResponse patient = patientService.createPatient(request);
 
         assertThat(patient, notNullValue());
         assertThat(patient.getId(), greaterThan(0L));

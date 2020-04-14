@@ -6,6 +6,7 @@ import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.PatientService;
 import org.fasttrackit.healthcare.steps.PatientTestSteps;
 import org.fasttrackit.healthcare.steps.ProfileTestSteps;
+import org.fasttrackit.healthcare.transfer.patient.PatientResponse;
 import org.fasttrackit.healthcare.transfer.patient.SavePatientRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -52,9 +53,9 @@ public class PatientServiceIntegrationTest {
 
     @Test
     void getPatient_whenExistingPatient_thenReturnPatient() {
-        Patient patient = patientTestSteps.createPatient();
+        PatientResponse patient = patientTestSteps.createPatient();
 
-        Patient response = patientService.getPatient(patient.getId());
+        PatientResponse response = patientService.getPatient(patient.getId());
 
         assertThat(patient, notNullValue());
         assertThat(response.getId(), is(patient.getId()));
@@ -71,7 +72,7 @@ public class PatientServiceIntegrationTest {
 
     @Test
     void updatePatient_whenValidRequest_thenReturnUpdatedPatient() {
-        Patient patient = patientTestSteps.createPatient();
+        PatientResponse patient = patientTestSteps.createPatient();
 
         SavePatientRequest request = new SavePatientRequest();
         request.setFirstName(patient.getFirstName() + " updated.");
@@ -79,7 +80,7 @@ public class PatientServiceIntegrationTest {
         request.setPhoneNumber(patient.getPhoneNumber() + " updated.");
         request.setBirthDate(patient.getBirthDate().minusYears(2));
 
-        Patient updatedPatient = patientService.updatePatient(patient.getId(), request);
+        PatientResponse updatedPatient = patientService.updatePatient(patient.getId(), request);
 
         assertThat(updatedPatient, notNullValue());
         assertThat(updatedPatient.getId(), is(patient.getId()));
@@ -91,7 +92,7 @@ public class PatientServiceIntegrationTest {
 
     @Test
     void deletePatient_whenExistingPatient_thenPatientDoesNotExistAnymore() {
-        Patient patient = patientTestSteps.createPatient();
+        PatientResponse patient = patientTestSteps.createPatient();
 
         patientService.deletePatient(patient.getId());
 

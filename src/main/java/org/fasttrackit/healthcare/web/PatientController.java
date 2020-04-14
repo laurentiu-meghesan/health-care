@@ -1,8 +1,8 @@
 package org.fasttrackit.healthcare.web;
 
-import org.fasttrackit.healthcare.domain.Patient;
 import org.fasttrackit.healthcare.service.PatientService;
 import org.fasttrackit.healthcare.transfer.patient.GetPatientsRequest;
+import org.fasttrackit.healthcare.transfer.patient.PatientResponse;
 import org.fasttrackit.healthcare.transfer.patient.SavePatientRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,26 +26,26 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<Patient> createPatient(@Valid @RequestBody SavePatientRequest request) {
-        Patient patient = patientService.createPatient(request);
+    public ResponseEntity<PatientResponse> createPatient(@Valid @RequestBody SavePatientRequest request) {
+        PatientResponse patient = patientService.createPatient(request);
         return new ResponseEntity<>(patient, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatient(@PathVariable long id) {
-        Patient patient = patientService.getPatient(id);
+    public ResponseEntity<PatientResponse> getPatient(@PathVariable long id) {
+        PatientResponse patient = patientService.getPatient(id);
         return new ResponseEntity<>(patient, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<Page<Patient>> getPatients(GetPatientsRequest request, Pageable pageable) {
-        Page<Patient> patients = patientService.getPatients(request, pageable);
+    public ResponseEntity<Page<PatientResponse>> getPatients(GetPatientsRequest request, Pageable pageable) {
+        Page<PatientResponse> patients = patientService.getPatients(request, pageable);
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable long id, @Valid @RequestBody SavePatientRequest request) {
-        Patient patient = patientService.updatePatient(id, request);
+    public ResponseEntity<PatientResponse> updatePatient(@PathVariable long id, @Valid @RequestBody SavePatientRequest request) {
+        PatientResponse patient = patientService.updatePatient(id, request);
         return new ResponseEntity<>(patient, HttpStatus.OK);
     }
 

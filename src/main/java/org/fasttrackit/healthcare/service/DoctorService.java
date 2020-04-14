@@ -5,6 +5,7 @@ import org.fasttrackit.healthcare.domain.Doctor;
 import org.fasttrackit.healthcare.domain.Profile;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.DoctorRepository;
+import org.fasttrackit.healthcare.transfer.doctor.DoctorResponse;
 import org.fasttrackit.healthcare.transfer.doctor.SaveDoctorRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,28 +32,48 @@ public class DoctorService {
     }
 
     @Transactional
-    public Doctor createDoctor(SaveDoctorRequest request) {
+    public DoctorResponse createDoctor(SaveDoctorRequest request) {
         LOGGER.info("Creating Doctor {}", request);
 
         Profile profile = profileService.getProfile(request.getProfileId());
         Doctor doctor = objectMapper.convertValue(request, Doctor.class);
         doctor.setProfile(profile);
 
-        return doctorRepository.save(doctor);
+        Doctor savedDoctor = doctorRepository.save(doctor);
+        return mapDoctorResponse(savedDoctor);
     }
 
-    public Doctor getDoctor(long id) {
+    public DoctorResponse getDoctor(long id) {
         LOGGER.info("Retrieving Doctor {}", id);
 
+        Doctor doctor = findDoctor(id);
+
+        return mapDoctorResponse(doctor);
+    }
+
+    public Doctor findDoctor(long id) {
         return doctorRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Doctor " + id + " not found."));
     }
 
-    public Doctor updateDoctor(long id, SaveDoctorRequest request) {
+    private DoctorResponse mapDoctorResponse(Doctor doctor) {
+        DoctorResponse doctorDto = new DoctorResponse();
+        doctorDto.setId(doctor.getId());
+        doctorDto.setFirstName(doctor.getFirstName());
+        doctorDto.setLastName(doctor.getLastName());
+        doctorDto.setOfficeAddress(doctor.getOfficeAddress());
+        doctorDto.setPhoneNumber(doctor.getPhoneNumber());
+        return doctorDto;
+    }
+
+    public DoctorResponse updateDoctor(long id, SaveDoctorRequest request) {
         LOGGER.info("Updating doctor {}", id);
-        Doctor doctor = getDoctor(id);
+        Doctor doctor = findDoctor(id);
+
         BeanUtils.copyProperties(request, doctor);
-        return doctorRepository.save(doctor);
+        Doctor savedDoctor = doctorRepository.save(doctor);
+
+        return mapDoctorResponse(savedDoctor);
     }
 
     public void deleteDoctor(long id) {

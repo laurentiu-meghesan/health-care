@@ -6,6 +6,7 @@ import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.DoctorService;
 import org.fasttrackit.healthcare.steps.DoctorTestSteps;
 import org.fasttrackit.healthcare.steps.ProfileTestSteps;
+import org.fasttrackit.healthcare.transfer.doctor.DoctorResponse;
 import org.fasttrackit.healthcare.transfer.doctor.SaveDoctorRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -55,9 +56,9 @@ public class DoctorServiceIntegrationTest {
 
     @Test
     void getDoctor_whenExistingDoctor_thenReturnDoctor() {
-        Doctor doctor = doctorTestSteps.createDoctor();
+        DoctorResponse doctor = doctorTestSteps.createDoctor();
 
-        Doctor response = doctorService.getDoctor(doctor.getId());
+        DoctorResponse response = doctorService.getDoctor(doctor.getId());
 
         assertThat(response, notNullValue());
         assertThat(response.getId(), is(doctor.getId()));
@@ -69,7 +70,7 @@ public class DoctorServiceIntegrationTest {
 
     @Test
     void updateDoctor_whenExistingDoctor_thenReturnUpdatedDoctor() {
-        Doctor doctor = doctorTestSteps.createDoctor();
+        DoctorResponse doctor = doctorTestSteps.createDoctor();
 
         SaveDoctorRequest request = new SaveDoctorRequest();
         request.setFirstName(doctor.getFirstName() + " updated.");
@@ -77,7 +78,7 @@ public class DoctorServiceIntegrationTest {
         request.setOfficeAddress(doctor.getOfficeAddress() + " updated.");
         request.setPhoneNumber(doctor.getPhoneNumber() + " updated.");
 
-        Doctor updatedDoctor = doctorService.updateDoctor(doctor.getId(), request);
+        DoctorResponse updatedDoctor = doctorService.updateDoctor(doctor.getId(), request);
 
         assertThat(updatedDoctor, notNullValue());
         assertThat(updatedDoctor.getFirstName(), is(request.getFirstName()));
@@ -88,7 +89,7 @@ public class DoctorServiceIntegrationTest {
 
     @Test
     void deleteDoctor_whenExistingDoctor_thenDoctorDoesNotExistAnymore() {
-        Doctor doctor = doctorTestSteps.createDoctor();
+        DoctorResponse doctor = doctorTestSteps.createDoctor();
 
         doctorService.deleteDoctor(doctor.getId());
 

@@ -3,6 +3,10 @@ package org.fasttrackit.healthcare.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 //import java.time.Period;
 
 @Entity
@@ -23,8 +27,17 @@ public class Patient {
     @MapsId
     private Profile profile;
 
-    public Profile getProfile() {
-        return profile;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private Set<Appointment> appointments = new HashSet<>();
+
+    public void addAppointment(Appointment appointment) {
+        appointments.add(appointment);
+        appointment.setPatient(this);
+    }
+
+    public void removeAppointment(Appointment appointment) {
+        appointments.remove(appointment);
+        appointment.setPatient(null);
     }
 
     /*    private LocalDate currentDate = LocalDate.now();
@@ -42,8 +55,20 @@ public class Patient {
         return patientAge;
     }*/
 
+    public Profile getProfile() {
+        return profile;
+    }
+
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public Set<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(Set<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     public long getId() {

@@ -1,56 +1,12 @@
-package org.fasttrackit.healthcare.domain;
+package org.fasttrackit.healthcare.transfer.doctor;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
-@Entity
-public class Doctor {
-
-    @Id
+public class DoctorResponse {
     private long id;
-    @NotNull
     private String firstName;
-    @NotNull
     private String lastName;
-    @NotNull
     private String phoneNumber;
-    @NotNull
     private String officeAddress;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    private Profile profile;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<Appointment> appointments = new HashSet<>();
-
-    public void addAppointment(Appointment appointment) {
-        appointments.add(appointment);
-        appointment.setDoctor(this);
-    }
-
-    public void removeAppointment(Appointment appointment) {
-        appointments.remove(appointment);
-        appointment.setDoctor(null);
-    }
-
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
-    public Set<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public void setAppointments(Set<Appointment> appointments) {
-        this.appointments = appointments;
-    }
 
     public long getId() {
         return id;
@@ -94,13 +50,12 @@ public class Doctor {
 
     @Override
     public String toString() {
-        return "Doctor{" +
+        return "DoctorResponse{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", officeAddress='" + officeAddress + '\'' +
-                ", profile=" + profile +
                 '}';
     }
 }
