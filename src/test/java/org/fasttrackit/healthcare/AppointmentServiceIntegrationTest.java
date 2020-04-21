@@ -1,8 +1,8 @@
 package org.fasttrackit.healthcare;
 
-import org.fasttrackit.healthcare.domain.Appointment;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.AppointmentService;
+import org.fasttrackit.healthcare.transfer.appointment.AppointmentResponse;
 import org.fasttrackit.healthcare.transfer.appointment.SaveAppointmentRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,8 @@ public class AppointmentServiceIntegrationTest {
     @Test
     void createAppointment_whenMissingAppointmentDate_thenExceptionIsThrown() {
         SaveAppointmentRequest request = new SaveAppointmentRequest();
-        request.setPatientID(1L);
+        request.setPatientId(3L);
+        request.setDoctorId(7L);
         request.setSymptoms("febra");
         request.setDiagnostic("gripa");
         request.setTreatment("paracetamol");
@@ -47,14 +48,13 @@ public class AppointmentServiceIntegrationTest {
 
     @Test
     void getAppointment_whenExistingAppointment_thenReturnAppointment() {
-        Appointment appointment = createAppointment();
+        AppointmentResponse appointment = createAppointment();
 
-        Appointment response = appointmentService.getAppointment(appointment.getId());
+        AppointmentResponse response = appointmentService.getAppointment(appointment.getId());
 
         assertThat(response, notNullValue());
         assertThat(response.getId(), is(appointment.getId()));
         assertThat(response.getAppointmentDate(), is(appointment.getAppointmentDate()));
-        assertThat(response.getPatientId(), is(appointment.getPatientId()));
         assertThat(response.getSymptoms(), is(appointment.getSymptoms()));
         assertThat(response.getDiagnostic(), is(appointment.getDiagnostic()));
         assertThat(response.getTreatment(), is(appointment.getTreatment()));
@@ -68,48 +68,47 @@ public class AppointmentServiceIntegrationTest {
 
     @Test
     void updateAppointment_whenValidRequest_thenUpdateAppointment() {
-        Appointment appointment = createAppointment();
+        AppointmentResponse appointment = createAppointment();
 
         SaveAppointmentRequest request = new SaveAppointmentRequest();
-        request.setPatientID(appointment.getPatientId());
         request.setTreatment(appointment.getTreatment() + " updated.");
         request.setRecommendations(appointment.getRecommendations() + " updated.");
         request.setDiagnostic(appointment.getDiagnostic() + " updated.");
         request.setSymptoms(appointment.getSymptoms() + " updated.");
         request.setAppointmentDate(appointment.getAppointmentDate().plusDays(10));
 
-        Appointment updatedAppointment = appointmentService.updateAppointment(appointment.getId(), request);
+        AppointmentResponse updatedAppointment = appointmentService.updateAppointment(appointment.getId(), request);
 
         assertThat(updatedAppointment, notNullValue());
         assertThat(updatedAppointment.getId(), is(appointment.getId()));
         assertThat(updatedAppointment.getAppointmentDate(), is(request.getAppointmentDate()));
         assertThat(updatedAppointment.getSymptoms(), is(request.getSymptoms()));
         assertThat(updatedAppointment.getDiagnostic(), is(request.getDiagnostic()));
-        assertThat(updatedAppointment.getPatientId(), is(request.getPatientID()));
         assertThat(updatedAppointment.getTreatment(), is(request.getTreatment()));
         assertThat(updatedAppointment.getRecommendations(), is(request.getRecommendations()));
     }
 
     @Test
     void deleteAppointment_whenExistingAppointment_thenTheAppointmentDoesNotExistAnymore() {
-        Appointment appointment = createAppointment();
+        AppointmentResponse appointment = createAppointment();
 
         appointmentService.deleteAppointment(appointment.getId());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> appointmentService.getAppointment(appointment.getId()));
     }
 
-    private Appointment createAppointment() {
+    private AppointmentResponse createAppointment() {
         SaveAppointmentRequest request = new SaveAppointmentRequest();
         request.setAppointmentDate(LocalDateTime.of
                 (2020, 8, 10, 12, 30));
-        request.setPatientID(1L);
+        request.setPatientId(3L);
+        request.setDoctorId(7L);
         request.setSymptoms("febra");
         request.setDiagnostic("gripa");
         request.setTreatment("paracetamol");
         request.setRecommendations("ceai");
 
-        Appointment appointment = appointmentService.createAppointment(request);
+        AppointmentResponse appointment = appointmentService.createAppointment(request);
 
         assertThat(appointment, notNullValue());
         assertThat(appointment.getId(), greaterThan(0L));

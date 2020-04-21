@@ -1,12 +1,13 @@
 package org.fasttrackit.healthcare.transfer.appointment;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class SaveAppointmentRequest {
     @NotNull
     private LocalDateTime appointmentDate;
-    @NotNull
-    private Long patientID;
+    private Long patientId;
+    private Long doctorId;
     private String symptoms;
     private String diagnostic;
     private String treatment;
@@ -16,16 +17,24 @@ public class SaveAppointmentRequest {
         return appointmentDate;
     }
 
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
+    }
+
     public void setAppointmentDate(LocalDateTime appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
-    public long getPatientID() {
-        return patientID;
+    public long getPatientId() {
+        return patientId;
     }
 
-    public void setPatientID(Long patientID) {
-        this.patientID = patientID;
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
     }
 
     public String getSymptoms() {
@@ -64,7 +73,8 @@ public class SaveAppointmentRequest {
     public String toString() {
         return "SaveAppointmentRequest{" +
                 "appointmentDate=" + appointmentDate +
-                ", patientID=" + patientID +
+                ", patientID=" + patientId +
+                ", doctorId=" + doctorId +
                 ", symptoms='" + symptoms + '\'' +
                 ", diagnostic='" + diagnostic + '\'' +
                 ", treatment='" + treatment + '\'' +

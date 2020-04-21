@@ -1,8 +1,7 @@
 package org.fasttrackit.healthcare.web;
 
-import org.fasttrackit.healthcare.domain.Appointment;
 import org.fasttrackit.healthcare.service.AppointmentService;
-import org.fasttrackit.healthcare.transfer.appointment.GetAppointmentsRequest;
+import org.fasttrackit.healthcare.transfer.appointment.AppointmentResponse;
 import org.fasttrackit.healthcare.transfer.appointment.SaveAppointmentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,27 +25,27 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Appointment> createAppointment(@Valid @RequestBody SaveAppointmentRequest request) {
+    public ResponseEntity<AppointmentResponse> createAppointment(@Valid @RequestBody SaveAppointmentRequest request) {
 
-        Appointment appointment = appointmentService.createAppointment(request);
+        AppointmentResponse appointment = appointmentService.createAppointment(request);
         return new ResponseEntity<>(appointment, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getAppointment(@PathVariable long id) {
-        Appointment appointment = appointmentService.getAppointment(id);
+    public ResponseEntity<AppointmentResponse> getAppointment(@PathVariable long id) {
+        AppointmentResponse appointment = appointmentService.getAppointment(id);
         return new ResponseEntity<>(appointment, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<Page<Appointment>> getAppointments(GetAppointmentsRequest request, Pageable pageable) {
-        Page<Appointment> appointments = appointmentService.getAppointments(request, pageable);
+    public ResponseEntity<Page<AppointmentResponse>> getAppointments(@PathVariable long patientId, Pageable pageable) {
+        Page<AppointmentResponse> appointments = appointmentService.getAppointments(patientId, pageable);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Appointment> updateAppointment(@PathVariable long id, @Valid @RequestBody SaveAppointmentRequest request) {
-        Appointment appointment = appointmentService.updateAppointment(id, request);
+    public ResponseEntity<AppointmentResponse> updateAppointment(@PathVariable long id, @Valid @RequestBody SaveAppointmentRequest request) {
+        AppointmentResponse appointment = appointmentService.updateAppointment(id, request);
         return new ResponseEntity<>(appointment, HttpStatus.OK);
     }
 

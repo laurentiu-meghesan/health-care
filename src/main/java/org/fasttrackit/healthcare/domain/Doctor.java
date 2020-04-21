@@ -2,8 +2,6 @@ package org.fasttrackit.healthcare.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class Doctor {
@@ -23,33 +21,12 @@ public class Doctor {
     @MapsId
     private Profile profile;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<Appointment> appointments = new HashSet<>();
-
-    public void addAppointment(Appointment appointment) {
-        appointments.add(appointment);
-        appointment.setDoctor(this);
-    }
-
-    public void removeAppointment(Appointment appointment) {
-        appointments.remove(appointment);
-        appointment.setDoctor(null);
-    }
-
     public Profile getProfile() {
         return profile;
     }
 
     public void setProfile(Profile profile) {
         this.profile = profile;
-    }
-
-    public Set<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public void setAppointments(Set<Appointment> appointments) {
-        this.appointments = appointments;
     }
 
     public long getId() {
@@ -100,7 +77,6 @@ public class Doctor {
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", officeAddress='" + officeAddress + '\'' +
-                ", profile=" + profile +
                 '}';
     }
 }

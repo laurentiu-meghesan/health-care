@@ -1,43 +1,32 @@
-package org.fasttrackit.healthcare.domain;
+package org.fasttrackit.healthcare.transfer.appointment;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Entity
-public class Appointment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AppointmentResponse {
+
     private long id;
-    @NotNull
+    private long patientId;
+    private long doctorId;
     private LocalDateTime appointmentDate;
     private String symptoms;
     private String diagnostic;
     private String treatment;
     private String recommendations;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
-
-    public Doctor getDoctor() {
-        return doctor;
+    public long getDoctorId() {
+        return doctorId;
     }
 
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+    public void setDoctorId(long doctorId) {
+        this.doctorId = doctorId;
     }
 
-    public Patient getPatient() {
-        return patient;
+    public long getPatientId() {
+        return patientId;
     }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public void setPatientId(long patientId) {
+        this.patientId = patientId;
     }
 
     public long getId() {
@@ -90,8 +79,10 @@ public class Appointment {
 
     @Override
     public String toString() {
-        return "Appointment{" +
+        return "AppointmentResponse{" +
                 "id=" + id +
+                ", patientId=" + patientId +
+                ", doctorId=" + doctorId +
                 ", appointmentDate=" + appointmentDate +
                 ", symptoms='" + symptoms + '\'' +
                 ", diagnostic='" + diagnostic + '\'' +
