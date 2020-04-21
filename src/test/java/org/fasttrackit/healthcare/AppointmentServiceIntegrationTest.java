@@ -31,7 +31,7 @@ public class AppointmentServiceIntegrationTest {
     @Test
     void createAppointment_whenMissingAppointmentDate_thenExceptionIsThrown() {
         SaveAppointmentRequest request = new SaveAppointmentRequest();
-        request.setPatientId(3L);
+        request.setPatientId(13L);
         request.setDoctorId(7L);
         request.setSymptoms("febra");
         request.setDiagnostic("gripa");
@@ -101,7 +101,7 @@ public class AppointmentServiceIntegrationTest {
         SaveAppointmentRequest request = new SaveAppointmentRequest();
         request.setAppointmentDate(LocalDateTime.of
                 (2020, 8, 10, 12, 30));
-        request.setPatientId(3L);
+        request.setPatientId(13L);
         request.setDoctorId(7L);
         request.setSymptoms("febra");
         request.setDiagnostic("gripa");

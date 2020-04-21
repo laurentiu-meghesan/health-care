@@ -50,13 +50,32 @@ public class ChatService {
         chat.setPatient(patient);
 
         Chat savedChat = chatRepository.save(chat);
+
+        return mapChatResponse(savedChat);
     }
 
-    public Chat getChat(long id) {
+    public ChatResponse getChat(long id) {
         LOGGER.info("Retrieving message {}", id);
 
+        Chat chat = findChat(id);
+
+        return mapChatResponse(chat);
+    }
+
+    public Chat findChat(long id) {
         return chatRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Message" + id + " not found."));
+    }
+
+    private ChatResponse mapChatResponse(Chat chat) {
+        ChatResponse chatDto = new ChatResponse();
+        chatDto.setId(chat.getId());
+        chatDto.setDoctorId(chat.getDoctor().getId());
+        chatDto.setPatientId(chat.getPatient().getId());
+        chatDto.setMessageDate(chat.getMessageDate());
+        chatDto.setMessageSent(chat.getMessageSent());
+        chatDto.setMessageReceived(chat.getMessageReceived());
+        return chatDto;
     }
 
     @Transactional
@@ -67,27 +86,23 @@ public class ChatService {
 
         List<ChatResponse> chatDtos = new ArrayList<>();
 
-        for (Chat chat : chatsPage.getContent()){
-            ChatResponse dto = new ChatResponse();
-            dto.setId(chat.getId());
-            dto.setDoctorId(chat.getDoctor().getId());
-            dto.setPatientId(chat.getPatient().getId());
-            dto.setMessageDate(chat.getMessageDate());
-            dto.setMessageSent(chat.getMessageSent());
-            dto.setMessageReceived(chat.getMessageReceived());
+        for (Chat chat : chatsPage.getContent()) {
+            ChatResponse chatDto = mapChatResponse(chat);
 
-            chatDtos.add(dto);
+            chatDtos.add(chatDto);
         }
 
         return new PageImpl<>(chatDtos, pageable, chatsPage.getTotalElements());
     }
 
-    public Chat updateChat(long id, SaveChatRequest request) {
+    public ChatResponse updateChat(long id, SaveChatRequest request) {
         LOGGER.info("Updated chat {}: {}", id, request);
-        Chat chat = getChat(id);
+        Chat chat = findChat(id);
 
         BeanUtils.copyProperties(request, chat);
-        return chatRepository.save(chat);
+        Chat savedChat = chatRepository.save(chat);
+
+        return mapChatResponse(savedChat);
     }
 
     public void deleteChat(long id) {

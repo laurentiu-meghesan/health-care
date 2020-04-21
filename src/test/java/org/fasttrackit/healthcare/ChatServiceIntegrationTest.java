@@ -3,6 +3,7 @@ package org.fasttrackit.healthcare;
 import org.fasttrackit.healthcare.domain.Chat;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.service.ChatService;
+import org.fasttrackit.healthcare.transfer.chat.ChatResponse;
 import org.fasttrackit.healthcare.transfer.chat.SaveChatRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -44,9 +45,9 @@ public class ChatServiceIntegrationTest {
 
     @Test
     void getChat_whenExistingChat_thenReturnChat() {
-        Chat chat = createChat();
+        ChatResponse chat = createChat();
 
-        Chat response = chatService.getChat(chat.getId());
+        ChatResponse response = chatService.getChat(chat.getId());
 
         assertThat(response, notNullValue());
         assertThat(response.getId(), is(chat.getId()));
@@ -64,7 +65,7 @@ public class ChatServiceIntegrationTest {
 
     @Test
     void updateChat_whenValidRequest_thenReturnUpdatedChat() {
-        Chat chat = createChat();
+        ChatResponse chat = createChat();
 
         SaveChatRequest request = new SaveChatRequest();
         request.setPatientId(chat.getPatientId());
@@ -72,7 +73,7 @@ public class ChatServiceIntegrationTest {
         request.setMessageSent(chat.getMessageSent() + " updated.");
         request.setMessageReceived(chat.getMessageReceived() + " updated.");
 
-        Chat updatedChat = chatService.updateChat(chat.getId(), request);
+        ChatResponse updatedChat = chatService.updateChat(chat.getId(), request);
 
         assertThat(updatedChat, notNullValue());
         assertThat(updatedChat.getId(), is(chat.getId()));
@@ -84,21 +85,22 @@ public class ChatServiceIntegrationTest {
 
     @Test
     void deleteChat_whenExistingChat_thenChatDoesNotExistAnymore() {
-        Chat chat = createChat();
+        ChatResponse chat = createChat();
 
         chatService.deleteChat(chat.getId());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> chatService.getChat(chat.getId()));
     }
 
-    private Chat createChat() {
+    private ChatResponse createChat() {
         SaveChatRequest request = new SaveChatRequest();
         request.setMessageDate(LocalDateTime.of(2020, 3, 5, 19, 30));
-        request.setPatientId(10L);
+        request.setPatientId(13L);
+        request.setDoctorId(7L);
         request.setMessageSent("Ciao!");
         request.setMessageReceived("Hello!");
 
-        Chat chat = chatService.createChat(request);
+        ChatResponse chat = chatService.createChat(request);
 
         assertThat(chat, notNullValue());
         assertThat(chat.getId(), greaterThan(0L));

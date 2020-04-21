@@ -93,14 +93,6 @@ public class AppointmentService {
 
         for (Appointment appointment : appointmentsPage.getContent()) {
             AppointmentResponse appointmentDto = mapAppointmentResponse(appointment);
-            appointmentDto.setId(appointment.getId());
-            appointmentDto.setPatientId(appointment.getPatient().getId());
-            appointmentDto.setDoctorId(appointment.getDoctor().getId());
-            appointmentDto.setAppointmentDate(appointment.getAppointmentDate());
-            appointmentDto.setSymptoms(appointment.getSymptoms());
-            appointmentDto.setDiagnostic(appointment.getDiagnostic());
-            appointmentDto.setTreatment(appointment.getTreatment());
-            appointmentDto.setRecommendations(appointment.getRecommendations());
 
             appointmentDtos.add(appointmentDto);
         }

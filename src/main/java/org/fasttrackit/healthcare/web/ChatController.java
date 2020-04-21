@@ -37,8 +37,8 @@ public class ChatController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ChatResponse>> getChats(GetChatsRequest request, Pageable pageable) {
-        Page<ChatResponse> chats = chatService.getChats(request, pageable);
+    public ResponseEntity<Page<ChatResponse>> getChats(@PathVariable long patientId, Pageable pageable) {
+        Page<ChatResponse> chats = chatService.getChats(patientId, pageable);
         return new ResponseEntity<>(chats, HttpStatus.OK);
     }
 
