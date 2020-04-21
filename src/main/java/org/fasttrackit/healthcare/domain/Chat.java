@@ -1,9 +1,6 @@
 package org.fasttrackit.healthcare.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -13,13 +10,35 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotNull
-    private long patientId;
-    @NotNull
     private String messageSent;
     @NotNull
     private String messageReceived;
     @NotNull
     private LocalDateTime messageDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 
     public long getId() {
         return id;
@@ -27,14 +46,6 @@ public class Chat {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(long patientId) {
-        this.patientId = patientId;
     }
 
     public String getMessageSent() {
@@ -65,7 +76,6 @@ public class Chat {
     public String toString() {
         return "Chat{" +
                 "id=" + id +
-                ", patientId=" + patientId +
                 ", messageSent='" + messageSent + '\'' +
                 ", messageReceived='" + messageReceived + '\'' +
                 ", messageDate=" + messageDate +

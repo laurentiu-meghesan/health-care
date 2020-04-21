@@ -1,13 +1,9 @@
 package org.fasttrackit.healthcare.transfer.profile;
 
-import javax.validation.constraints.NotNull;
-
 public class SaveProfileRequest {
-    @NotNull
+
     private String userName;
-    @NotNull
     private String password;
-    @NotNull
     private String email;
     private boolean isDoctor;
 

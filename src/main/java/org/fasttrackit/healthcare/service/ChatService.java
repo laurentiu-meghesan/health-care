@@ -1,37 +1,55 @@
 package org.fasttrackit.healthcare.service;
 
 import org.fasttrackit.healthcare.domain.Chat;
+import org.fasttrackit.healthcare.domain.Doctor;
+import org.fasttrackit.healthcare.domain.Patient;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.ChatRepository;
-import org.fasttrackit.healthcare.transfer.chat.GetChatsRequest;
+import org.fasttrackit.healthcare.transfer.chat.ChatResponse;
 import org.fasttrackit.healthcare.transfer.chat.SaveChatRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ChatService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatService.class);
 
     private final ChatRepository chatRepository;
+    private final DoctorService doctorService;
+    private final PatientService patientService;
 
     @Autowired
-    public ChatService(ChatRepository chatRepository) {
+    public ChatService(ChatRepository chatRepository, DoctorService doctorService, PatientService patientService) {
         this.chatRepository = chatRepository;
+        this.doctorService = doctorService;
+        this.patientService = patientService;
     }
 
-    public Chat createChat(SaveChatRequest request) {
+    @Transactional
+    public ChatResponse createChat(SaveChatRequest request) {
         LOGGER.info("Creating chat {}", request);
+
+        Doctor doctor = doctorService.findDoctor(request.getDoctorId());
+        Patient patient = patientService.findPatient(request.getPatientId());
+
         Chat chat = new Chat();
-        chat.setPatientId(request.getPatientId());
         chat.setMessageDate(request.getMessageDate());
         chat.setMessageSent(request.getMessageSent());
         chat.setMessageReceived(request.getMessageReceived());
-        return chatRepository.save(chat);
+        chat.setDoctor(doctor);
+        chat.setPatient(patient);
+
+        Chat savedChat = chatRepository.save(chat);
     }
 
     public Chat getChat(long id) {
@@ -41,13 +59,27 @@ public class ChatService {
                 new ResourceNotFoundException("Message" + id + " not found."));
     }
 
-    public Page<Chat> getChats(GetChatsRequest request, Pageable pageable) {
-        LOGGER.info("Retrieving messages {}", request);
+    @Transactional
+    public Page<ChatResponse> getChats(long patientId, Pageable pageable) {
+        LOGGER.info("Retrieving messages for patient {}", patientId);
 
-        if (request != null) {
-            return chatRepository.findByPatientId(request.getPatientId(), pageable);
+        Page<Chat> chatsPage = chatRepository.findByPatientId(patientId, pageable);
+
+        List<ChatResponse> chatDtos = new ArrayList<>();
+
+        for (Chat chat : chatsPage.getContent()){
+            ChatResponse dto = new ChatResponse();
+            dto.setId(chat.getId());
+            dto.setDoctorId(chat.getDoctor().getId());
+            dto.setPatientId(chat.getPatient().getId());
+            dto.setMessageDate(chat.getMessageDate());
+            dto.setMessageSent(chat.getMessageSent());
+            dto.setMessageReceived(chat.getMessageReceived());
+
+            chatDtos.add(dto);
         }
-        return chatRepository.findAll(pageable);
+
+        return new PageImpl<>(chatDtos, pageable, chatsPage.getTotalElements());
     }
 
     public Chat updateChat(long id, SaveChatRequest request) {

@@ -1,16 +1,23 @@
 package org.fasttrackit.healthcare.transfer.chat;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class SaveChatRequest {
-    @NotNull
+
     private Long patientId;
-    @NotNull
+    private Long doctorId;
     private String messageSent;
-    @NotNull
     private String messageReceived;
-    @NotNull
     private LocalDateTime messageDate;
+
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
+    }
 
     public long getPatientId() {
         return patientId;
@@ -48,6 +55,7 @@ public class SaveChatRequest {
     public String toString() {
         return "SaveChatRequest{" +
                 "patientId=" + patientId +
+                ", doctorId=" + doctorId +
                 ", messageSent='" + messageSent + '\'' +
                 ", messageReceived='" + messageReceived + '\'' +
                 ", messageDate=" + messageDate +

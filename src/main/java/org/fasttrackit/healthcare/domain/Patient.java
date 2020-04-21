@@ -93,7 +93,6 @@ public class Patient {
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", birthDate=" + birthDate +
-                ", profile=" + profile +
                 '}';
     }
 }

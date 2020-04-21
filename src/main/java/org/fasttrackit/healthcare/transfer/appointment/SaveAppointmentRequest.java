@@ -1,10 +1,8 @@
 package org.fasttrackit.healthcare.transfer.appointment;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class SaveAppointmentRequest {
-    @NotNull
     private LocalDateTime appointmentDate;
     private Long patientId;
     private Long doctorId;

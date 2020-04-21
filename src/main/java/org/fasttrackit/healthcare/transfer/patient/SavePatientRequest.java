@@ -4,13 +4,9 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class SavePatientRequest {
-    @NotNull
     private String firstName;
-    @NotNull
     private String lastName;
-    @NotNull
     private String phoneNumber;
-    @NotNull
     private LocalDate birthDate;
     private long profileId;
 

@@ -1,8 +1,7 @@
 package org.fasttrackit.healthcare.web;
 
-import org.fasttrackit.healthcare.domain.Chat;
 import org.fasttrackit.healthcare.service.ChatService;
-import org.fasttrackit.healthcare.transfer.chat.GetChatsRequest;
+import org.fasttrackit.healthcare.transfer.chat.ChatResponse;
 import org.fasttrackit.healthcare.transfer.chat.SaveChatRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,20 +25,20 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<Chat> createChat(@Valid @RequestBody SaveChatRequest request) {
-        Chat chat = chatService.createChat(request);
+    public ResponseEntity<ChatResponse> createChat(@Valid @RequestBody SaveChatRequest request) {
+        ChatResponse chat = chatService.createChat(request);
         return new ResponseEntity<>(chat, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Chat> getChat(@PathVariable long id) {
-        Chat chat = chatService.getChat(id);
+    public ResponseEntity<ChatResponse> getChat(@PathVariable long id) {
+        ChatResponse chat = chatService.getChat(id);
         return new ResponseEntity<>(chat, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<Page<Chat>> getChats(GetChatsRequest request, Pageable pageable) {
-        Page<Chat> chats = chatService.getChats(request, pageable);
+    public ResponseEntity<Page<ChatResponse>> getChats(GetChatsRequest request, Pageable pageable) {
+        Page<ChatResponse> chats = chatService.getChats(request, pageable);
         return new ResponseEntity<>(chats, HttpStatus.OK);
     }
 
