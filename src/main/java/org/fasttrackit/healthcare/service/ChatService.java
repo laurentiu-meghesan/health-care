@@ -82,7 +82,7 @@ public class ChatService {
     public Page<ChatResponse> getChats(long patientId, Pageable pageable) {
         LOGGER.info("Retrieving messages for patient {}", patientId);
 
-        Page<Chat> chatsPage = chatRepository.findByPatientId(patientId, pageable);
+        Page<Chat> chatsPage = chatRepository.findByPatientIdOrderByMessageDateDesc(patientId, pageable);
 
         List<ChatResponse> chatDtos = new ArrayList<>();
 

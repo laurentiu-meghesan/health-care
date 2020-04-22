@@ -37,7 +37,7 @@ public class AppointmentController {
         return new ResponseEntity<>(appointment, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/patientId={patientId}")
     public ResponseEntity<Page<AppointmentResponse>> getAppointments(@PathVariable long patientId, Pageable pageable) {
         Page<AppointmentResponse> appointments = appointmentService.getAppointments(patientId, pageable);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
