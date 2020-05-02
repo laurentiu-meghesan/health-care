@@ -87,7 +87,8 @@ public class AppointmentService {
     public Page<AppointmentResponse> getAppointments(long patientId, Pageable pageable) {
         LOGGER.info("Retrieving Appointments for patient {}", patientId);
 
-        Page<Appointment> appointmentsPage = appointmentRepository.findByPatientId(patientId, pageable);
+        Page<Appointment> appointmentsPage = appointmentRepository.
+                findByPatientIdOrderByAppointmentDateDesc(patientId, pageable);
 
         List<AppointmentResponse> appointmentDtos = new ArrayList<>();
 
