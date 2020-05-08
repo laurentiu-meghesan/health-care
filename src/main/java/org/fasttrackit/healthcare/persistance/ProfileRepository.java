@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
     Page<Profile> findByEmailContaining(String partialEmail, Pageable pageable);
+
+    Profile findByUserNameEqualsAndPasswordEquals(String userName, String password);
 }

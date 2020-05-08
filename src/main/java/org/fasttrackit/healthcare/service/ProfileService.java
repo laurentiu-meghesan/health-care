@@ -41,6 +41,11 @@ public class ProfileService {
                 new ResourceNotFoundException("Profile " + id + " not found."));
     }
 
+    public Profile loginProfile(String userName, String password){
+        LOGGER.info("Retrieving user {}", userName);
+        return profileRepository.findByUserNameEqualsAndPasswordEquals(userName, password);
+    }
+
     public Page<Profile> getProfiles(GetProfilesRequest request, Pageable pageable) {
         LOGGER.info("Retrieving Profiles {}", request);
 

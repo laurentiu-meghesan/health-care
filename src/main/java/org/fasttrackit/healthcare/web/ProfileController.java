@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 @CrossOrigin
 @RestController
@@ -34,6 +35,12 @@ public class ProfileController {
     @GetMapping("/{id}")
     public ResponseEntity<Profile> getProfile(@PathVariable long id) {
         Profile profile = profileService.getProfile(id);
+        return new ResponseEntity<>(profile, HttpStatus.OK);
+    }
+
+    @GetMapping("/userName&password")
+    public ResponseEntity<Profile> loginProfile(@RequestParam String userName, @RequestParam(value = "password") String password){
+        Profile profile = profileService.loginProfile(userName, password);
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
