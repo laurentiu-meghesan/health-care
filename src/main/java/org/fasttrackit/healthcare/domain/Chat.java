@@ -11,10 +11,10 @@ public class Chat {
     private long id;
     @NotNull
     private String messageSent;
-    @NotNull
     private String messageReceived;
     @NotNull
     private LocalDateTime messageDate;
+    private LocalDateTime messageReceivedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
@@ -72,6 +72,15 @@ public class Chat {
         this.messageDate = messageDate;
     }
 
+
+    public LocalDateTime getMessageReceivedDate() {
+        return messageReceivedDate;
+    }
+
+    public void setMessageReceivedDate(LocalDateTime messageReceivedDate) {
+        this.messageReceivedDate = messageReceivedDate;
+    }
+
     @Override
     public String toString() {
         return "Chat{" +
@@ -79,6 +88,7 @@ public class Chat {
                 ", messageSent='" + messageSent + '\'' +
                 ", messageReceived='" + messageReceived + '\'' +
                 ", messageDate=" + messageDate +
+                ", messageReceivedDate=" + messageReceivedDate +
                 '}';
     }
 }

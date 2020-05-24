@@ -10,6 +10,7 @@ public class ChatResponse {
     private String messageSent;
     private String messageReceived;
     private LocalDateTime messageDate;
+    private LocalDateTime messageReceivedDate;
 
     public long getId() {
         return id;
@@ -59,6 +60,14 @@ public class ChatResponse {
         this.messageDate = messageDate;
     }
 
+    public LocalDateTime getMessageReceivedDate() {
+        return messageReceivedDate;
+    }
+
+    public void setMessageReceivedDate(LocalDateTime messageReceivedDate) {
+        this.messageReceivedDate = messageReceivedDate;
+    }
+
     @Override
     public String toString() {
         return "ChatResponse{" +
@@ -68,6 +77,7 @@ public class ChatResponse {
                 ", messageSent='" + messageSent + '\'' +
                 ", messageReceived='" + messageReceived + '\'' +
                 ", messageDate=" + messageDate +
+                ", messageReceivedDate=" + messageReceivedDate +
                 '}';
     }
 }

@@ -10,6 +10,7 @@ public class SaveChatRequest {
     private String messageSent;
     private String messageReceived;
     private LocalDateTime messageDate;
+    private LocalDateTime messageReceivedDate;
 
     public Long getDoctorId() {
         return doctorId;
@@ -51,6 +52,14 @@ public class SaveChatRequest {
         this.messageDate = messageDate;
     }
 
+    public LocalDateTime getMessageReceivedDate() {
+        return messageReceivedDate;
+    }
+
+    public void setMessageReceivedDate(LocalDateTime messageReceivedDate) {
+        this.messageReceivedDate = messageReceivedDate;
+    }
+
     @Override
     public String toString() {
         return "SaveChatRequest{" +
@@ -59,6 +68,7 @@ public class SaveChatRequest {
                 ", messageSent='" + messageSent + '\'' +
                 ", messageReceived='" + messageReceived + '\'' +
                 ", messageDate=" + messageDate +
+                ", messageReceivedDate=" + messageReceivedDate +
                 '}';
     }
 }

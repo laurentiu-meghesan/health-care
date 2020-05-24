@@ -46,6 +46,7 @@ public class ChatService {
         chat.setMessageDate(request.getMessageDate());
         chat.setMessageSent(request.getMessageSent());
         chat.setMessageReceived(request.getMessageReceived());
+        chat.setMessageReceivedDate(request.getMessageReceivedDate());
         chat.setDoctor(doctor);
         chat.setPatient(patient);
 
@@ -73,6 +74,7 @@ public class ChatService {
         chatDto.setDoctorId(chat.getDoctor().getId());
         chatDto.setPatientId(chat.getPatient().getId());
         chatDto.setMessageDate(chat.getMessageDate());
+        chatDto.setMessageReceivedDate(chat.getMessageReceivedDate());
         chatDto.setMessageSent(chat.getMessageSent());
         chatDto.setMessageReceived(chat.getMessageReceived());
         return chatDto;
@@ -82,7 +84,7 @@ public class ChatService {
     public Page<ChatResponse> getChats(long patientId, Pageable pageable) {
         LOGGER.info("Retrieving messages for patient {}", patientId);
 
-        Page<Chat> chatsPage = chatRepository.findByPatientIdOrderByMessageDateDesc(patientId, pageable);
+        Page<Chat> chatsPage = chatRepository.findByPatientIdOrderByMessageDateAndMessageReceivedDate(patientId, pageable);
 
         List<ChatResponse> chatDtos = new ArrayList<>();
 
