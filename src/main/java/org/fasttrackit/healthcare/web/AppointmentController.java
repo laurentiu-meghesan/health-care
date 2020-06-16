@@ -2,6 +2,7 @@ package org.fasttrackit.healthcare.web;
 
 import org.fasttrackit.healthcare.service.AppointmentService;
 import org.fasttrackit.healthcare.transfer.appointment.AppointmentResponse;
+import org.fasttrackit.healthcare.transfer.appointment.GetAllAppointmentsRequest;
 import org.fasttrackit.healthcare.transfer.appointment.SaveAppointmentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,13 @@ public class AppointmentController {
     public ResponseEntity<Page<AppointmentResponse>> getAppointments(@PathVariable long patientId, Pageable pageable) {
         Page<AppointmentResponse> appointments = appointmentService.getAppointments(patientId, pageable);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<AppointmentResponse>> getAllAppointments(Pageable pageable) {
+        Page<AppointmentResponse> allAppointments = appointmentService.getAllAppointments(pageable);
+
+        return new ResponseEntity<>(allAppointments, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

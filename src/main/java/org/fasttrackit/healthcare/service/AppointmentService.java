@@ -6,6 +6,7 @@ import org.fasttrackit.healthcare.domain.Patient;
 import org.fasttrackit.healthcare.exception.ResourceNotFoundException;
 import org.fasttrackit.healthcare.persistance.AppointmentRepository;
 import org.fasttrackit.healthcare.transfer.appointment.AppointmentResponse;
+import org.fasttrackit.healthcare.transfer.appointment.GetAllAppointmentsRequest;
 import org.fasttrackit.healthcare.transfer.appointment.SaveAppointmentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +90,22 @@ public class AppointmentService {
 
         Page<Appointment> appointmentsPage = appointmentRepository.
                 findByPatientIdOrderByAppointmentDateDesc(patientId, pageable);
+
+        List<AppointmentResponse> appointmentDtos = new ArrayList<>();
+
+        for (Appointment appointment : appointmentsPage.getContent()) {
+            AppointmentResponse appointmentDto = mapAppointmentResponse(appointment);
+
+            appointmentDtos.add(appointmentDto);
+        }
+        return new PageImpl<>(appointmentDtos, pageable, appointmentsPage.getTotalElements());
+    }
+
+    @Transactional
+    public Page<AppointmentResponse> getAllAppointments(Pageable pageable) {
+        LOGGER.info("Retrieving all Appointments");
+
+        Page<Appointment> appointmentsPage = appointmentRepository.findAll(pageable);
 
         List<AppointmentResponse> appointmentDtos = new ArrayList<>();
 
