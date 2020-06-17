@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -114,6 +115,7 @@ public class AppointmentService {
 
             appointmentDtos.add(appointmentDto);
         }
+        Collections.reverse(appointmentDtos);
         return new PageImpl<>(appointmentDtos, pageable, appointmentsPage.getTotalElements());
     }
 
