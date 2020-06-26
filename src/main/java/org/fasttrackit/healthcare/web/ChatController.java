@@ -42,6 +42,12 @@ public class ChatController {
         return new ResponseEntity<>(chats, HttpStatus.OK);
     }
 
+    @GetMapping("/doctorId={doctorId}")
+    public ResponseEntity<Page<ChatResponse>> getChatsForDoctor(@PathVariable long doctorId, Pageable pageable) {
+        Page<ChatResponse> chats = chatService.getChatsForDoctor(doctorId, pageable);
+        return new ResponseEntity<>(chats, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteChat(@PathVariable long id) {
         chatService.deleteChat(id);

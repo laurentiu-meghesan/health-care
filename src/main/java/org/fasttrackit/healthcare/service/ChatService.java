@@ -97,6 +97,23 @@ public class ChatService {
         return new PageImpl<>(chatDtos, pageable, chatsPage.getTotalElements());
     }
 
+    @Transactional
+    public Page<ChatResponse> getChatsForDoctor(long doctorId, Pageable pageable) {
+        LOGGER.info("Retrieving messages for doctor {}", doctorId);
+
+        Page<Chat> chatsPage = chatRepository.findByDoctorIdOrderByMessageDateAndMessageReceivedDate(doctorId, pageable);
+
+        List<ChatResponse> chatDtos = new ArrayList<>();
+
+        for (Chat chat : chatsPage.getContent()) {
+            ChatResponse chatDto = mapChatResponse(chat);
+
+            chatDtos.add(chatDto);
+        }
+
+        return new PageImpl<>(chatDtos, pageable, chatsPage.getTotalElements());
+    }
+
     public ChatResponse updateChat(long id, SaveChatRequest request) {
         LOGGER.info("Updated chat {}: {}", id, request);
         Chat chat = findChat(id);
