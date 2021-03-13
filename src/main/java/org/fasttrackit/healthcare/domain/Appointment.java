@@ -15,6 +15,7 @@ public class Appointment {
     private String diagnostic;
     private String treatment;
     private String recommendations;
+    private String test;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
